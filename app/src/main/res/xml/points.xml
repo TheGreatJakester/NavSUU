@@ -1,0 +1,907 @@
+<place name="SUU" >
+	<point id="1">
+		<y>204</y>
+		<x>1573</x>
+	</point>
+	<point id="2">
+		<y>296</y>
+		<x>1491</x>
+		<name>PE North Door</name>
+	</point>
+	<point id="3">
+		<y>347</y>
+		<x>1721</x>
+	</point>
+	<point id="4">
+		<y>576</y>
+		<x>1724</x>
+	</point>
+	<point id="5">
+		<y>588</y>
+		<x>1624</x>
+		<name>PE Main Door</name>
+	</point>
+	<point id="6">
+		<y>629</y>
+		<x>1667</x>
+	</point>
+	<point id="7">
+		<y>679</y>
+		<x>1721</x>
+	</point>
+	<point id="8">
+		<y>1008</y>
+		<x>1726</x>
+	</point>
+	<point id="9">
+		<y>1027</y>
+		<x>2612</x>
+	</point>
+	<point id="10">
+		<y>1122</y>
+		<x>2668</x>
+	</point>
+	<point id="11">
+		<y>1124</y>
+		<x>2857</x>
+	</point>
+	<point id="12">
+		<y>1132</y>
+		<x>1719</x>
+	</point>
+	<point id="13">
+		<y>1186</y>
+		<x>2610</x>
+	</point>
+	<point id="14">
+		<y>1195</y>
+		<x>1327</x>
+	</point>
+	<point id="15">
+		<y>1202</y>
+		<x>1501</x>
+		<name>Business North Most Door</name>
+	</point>
+	<point id="16">
+		<y>1209</y>
+		<x>2946</x>
+	</point>
+	<point id="17">
+		<y>1211</y>
+		<x>2727</x>
+	</point>
+	<point id="18">
+		<y>1230</y>
+		<x>2686</x>
+	</point>
+	<point id="19">
+		<y>1278</y>
+		<x>3098</x>
+	</point>
+	<point id="20">
+		<y>1278</y>
+		<x>3260</x>
+		<gps>
+			<latitude>37.676708</latitude>
+			<longitude>113.066981</longitude>
+		</gps>
+	</point>
+	<point id="21">
+		<y>1279</y>
+		<x>2687</x>
+	</point>
+	<point id="22">
+		<y>1289</y>
+		<x>2891</x>
+	</point>
+	<point id="23">
+		<y>1304</y>
+		<x>2988</x>
+	</point>
+	<point id="24">
+		<y>1308</y>
+		<x>2696</x>
+	</point>
+	<point id="25">
+		<y>1425</y>
+		<x>2385</x>
+	</point>
+	<point id="26">
+		<y>1433</y>
+		<x>2735</x>
+	</point>
+	<point id="27">
+		<y>1434</y>
+		<x>2950</x>
+	</point>
+	<point id="28">
+		<y>1436</y>
+		<x>1785</x>
+	</point>
+	<point id="29">
+		<y>1437</y>
+		<x>2599</x>
+	</point>
+	<point id="30">
+		<y>1440</y>
+		<x>1725</x>
+	</point>
+	<point id="31">
+		<y>1441</y>
+		<x>2178</x>
+	</point>
+	<point id="32">
+		<y>1441</y>
+		<x>2496</x>
+	</point>
+	<point id="33">
+		<y>1441</y>
+		<x>2890</x>
+	</point>
+	<point id="34">
+		<y>1444</y>
+		<x>2289</x>
+	</point>
+	<point id="35">
+		<y>1466</y>
+		<x>2428</x>
+	</point>
+	<point id="36">
+		<y>1468</y>
+		<x>1669</x>
+		<name>Business East Door</name>
+	</point>
+	<point id="37">
+		<y>1475</y>
+		<x>1975</x>
+		<name>Admin 1st Floor North Door</name>
+	</point>
+	<point id="38">
+		<y>1507</y>
+		<x>2218</x>
+	</point>
+	<point id="39">
+		<y>1511</y>
+		<x>2134</x>
+	</point>
+	<point id="40">
+		<y>1513</y>
+		<x>2218</x>
+	</point>
+	<point id="41">
+		<y>1517</y>
+		<x>2930</x>
+	</point>
+	<point id="42">
+		<y>1518</y>
+		<x>2370</x>
+	</point>
+	<point id="43">
+		<y>1522</y>
+		<x>1328</x>
+	</point>
+	<point id="44">
+		<y>1522</y>
+		<x>2697</x>
+	</point>
+	<point id="45">
+		<y>1525</y>
+		<x>2431</x>
+	</point>
+	<point id="46">
+		<y>1529</y>
+		<x>2558</x>
+	</point>
+	<point id="47">
+		<y>1535</y>
+		<x>526</x>
+		<name>Enginerring Door</name>
+	</point>
+	<point id="48">
+		<y>1539</y>
+		<x>2593</x>
+	</point>
+	<point id="49">
+		<y>1560</y>
+		<x>3263</x>
+	</point>
+	<point id="50">
+		<y>1588</y>
+		<x>1786</x>
+	</point>
+	<point id="51">
+		<y>1596</y>
+		<x>1725</x>
+	</point>
+	<point id="52">
+		<y>1597</y>
+		<x>2639</x>
+	</point>
+	<point id="53">
+		<y>1600</y>
+		<x>1951</x>
+	</point>
+	<point id="54">
+		<y>1602</y>
+		<x>1811</x>
+	</point>
+	<point id="55">
+		<y>1634</y>
+		<x>3263</x>
+	</point>
+	<point id="56">
+		<y>1641</y>
+		<x>2991</x>
+	</point>
+	<point id="57">
+		<y>1644</y>
+		<x>2440</x>
+	</point>
+	<point id="58">
+		<y>1644</y>
+		<x>2590</x>
+	</point>
+	<point id="59">
+		<y>1644</y>
+		<x>2675</x>
+	</point>
+	<point id="60">
+		<y>1648</y>
+		<x>642</x>
+	</point>
+	<point id="61">
+		<y>1649</y>
+		<x>2837</x>
+	</point>
+	<point id="62">
+		<y>1662</y>
+		<x>1561</x>
+	</point>
+	<point id="63">
+		<y>1664</y>
+		<x>671</x>
+	</point>
+	<point id="64">
+		<y>1665</y>
+		<x>935</x>
+	</point>
+	<point id="65">
+		<y>1665</y>
+		<x>1260</x>
+	</point>
+	<point id="66">
+		<y>1666</y>
+		<x>286</x>
+	</point>
+	<point id="67">
+		<y>1667</y>
+		<x>838</x>
+	</point>
+	<point id="68">
+		<y>1667</y>
+		<x>1100</x>
+	</point>
+	<point id="69">
+		<y>1667</y>
+		<x>1381</x>
+	</point>
+	<point id="70">
+		<y>1668</y>
+		<x>541</x>
+	</point>
+	<point id="71">
+		<y>1681</y>
+		<x>1957</x>
+	</point>
+	<point id="72">
+		<y>1685</y>
+		<x>1791</x>
+	</point>
+	<point id="73">
+		<y>1687</y>
+		<x>1732</x>
+	</point>
+	<point id="74">
+		<y>1690</y>
+		<x>2368</x>
+	</point>
+	<point id="75">
+		<y>1691</y>
+		<x>2197</x>
+	</point>
+	<point id="76">
+		<y>1696</y>
+		<x>2906</x>
+	</point>
+	<point id="77">
+		<y>1697</y>
+		<x>2197</x>
+	</point>
+	<point id="78">
+		<y>1710</y>
+		<x>2134</x>
+	</point>
+	<point id="79">
+		<y>1712</y>
+		<x>274</x>
+	</point>
+	<point id="80">
+		<y>1717</y>
+		<x>543</x>
+	</point>
+	<point id="81">
+		<y>1728</y>
+		<x>1888</x>
+	</point>
+	<point id="82">
+		<y>1736</y>
+		<x>736</x>
+	</point>
+	<point id="83">
+		<y>1741</y>
+		<x>1259</x>
+	</point>
+	<point id="84">
+		<y>1756</y>
+		<x>1502</x>
+	</point>
+	<point id="85">
+		<y>1756</y>
+		<x>2570</x>
+	</point>
+	<point id="86">
+		<y>1760</y>
+		<x>934</x>
+		<name>Student Center Theater Door</name>
+	</point>
+	<point id="87">
+		<y>1761</y>
+		<x>1684</x>
+	</point>
+	<point id="88">
+		<y>1788</y>
+		<x>2222</x>
+	</point>
+	<point id="89">
+		<y>1795</y>
+		<x>676</x>
+		<name>Student Center Centrum North East Door</name>
+	</point>
+	<point id="90">
+		<y>1804</y>
+		<x>2369</x>
+	</point>
+	<point id="91">
+		<y>1815</y>
+		<x>2571</x>
+	</point>
+	<point id="92">
+		<y>1817</y>
+		<x>153</x>
+	</point>
+	<point id="93">
+		<y>1818</y>
+		<x>1900</x>
+	</point>
+	<point id="94">
+		<y>1842</y>
+		<x>1663</x>
+	</point>
+	<point id="95">
+		<y>1851</y>
+		<x>2142</x>
+	</point>
+	<point id="96">
+		<y>1856</y>
+		<x>1687</x>
+	</point>
+	<point id="97">
+		<y>1864</y>
+		<x>1141</x>
+		<name>Student Center Routundea North Door</name>
+	</point>
+	<point id="98">
+		<y>1864</y>
+		<x>1961</x>
+	</point>
+	<point id="99">
+		<y>1865</y>
+		<x>2319</x>
+	</point>
+	<point id="100">
+		<y>1867</y>
+		<x>3265</x>
+	</point>
+	<point id="101">
+		<y>1888</y>
+		<x>111</x>
+	</point>
+	<point id="102">
+		<y>1891</y>
+		<x>1402</x>
+		<name>Student Center Alley Door</name>
+	</point>
+	<point id="103">
+		<y>1912</y>
+		<x>1966</x>
+	</point>
+	<point id="104">
+		<y>1929</y>
+		<x>2153</x>
+	</point>
+	<point id="105">
+		<y>1930</y>
+		<x>2575</x>
+	</point>
+	<point id="106">
+		<y>1931</y>
+		<x>2437</x>
+	</point>
+	<point id="107">
+		<y>1934</y>
+		<x>2104</x>
+	</point>
+	<point id="108">
+		<y>1934</y>
+		<x>3009</x>
+	</point>
+	<point id="109">
+		<y>1939</y>
+		<x>3117</x>
+	</point>
+	<point id="110">
+		<y>1952</y>
+		<x>1804</x>
+	</point>
+	<point id="111" >
+		<y>1953</y>
+		<x>833</x>
+		<name>Student Center Dock</name>
+	</point>
+	<point id="112">
+		<y>1955</y>
+		<x>1740</x>
+		<gps>
+			<longitude>113.070181</longitude>
+			<latitude>37.675597</latitude>
+		</gps>
+	</point>
+	<point id="113">
+		<y>1971</y>
+		<x>2158</x>
+	</point>
+	<point id="114">
+		<y>1972</y>
+		<x>2222</x>
+	</point>
+	<point id="115">
+		<y>1991</y>
+		<x>3031</x>
+	</point>
+	<point id="116">
+		<y>2016</y>
+		<x>2409</x>
+	</point>
+	<point id="117">
+		<y>2027</y>
+		<x>2220</x>
+	</point>
+	<point id="118">
+		<y>2028</y>
+		<x>3263</x>
+	</point>
+	<point id="119">
+		<y>2071</y>
+		<x>3210</x>
+	</point>
+	<point id="120">
+		<y>2076</y>
+		<x>3272</x>
+	</point>
+	<point id="121">
+		<y>2110</y>
+		<x>3154</x>
+	</point>
+	<point id="122">
+		<y>2123</y>
+		<x>2508</x>
+	</point>
+	<point id="123">
+		<y>2142</y>
+		<x>3055</x>
+	</point>
+	<point id="124">
+		<y>2146</y>
+		<x>2384</x>
+	</point>
+	<point id="125" >
+		<y>2157</y>
+		<x>143</x>
+		<name>Student Center Centrum Ticketing Door</name>
+	</point>
+	<point id="126">
+		<y>2170</y>
+		<x>1682</x>
+	</point>
+	<point id="127">
+		<y>2174</y>
+		<x>2507</x>
+	</point>
+	<point id="128">
+		<y>2180</y>
+		<x>2599</x>
+	</point>
+	<point id="129">
+		<y>2182</y>
+		<x>2898</x>
+	</point>
+	<point id="130">
+		<y>2183</y>
+		<x>1222</x>
+	</point>
+	<point id="131">
+		<y>2186</y>
+		<x>1376</x>
+	</point>
+	<point id="132">
+		<y>2186</y>
+		<x>2839</x>
+	</point>
+	<point id="133">
+		<y>2200</y>
+		<x>937</x>
+	</point>
+	<point id="134">
+		<y>2219</y>
+		<x>2178</x>
+	</point>
+	<point id="135">
+		<y>2224</y>
+		<x>2621</x>
+	</point>
+	<point id="136">
+		<y>2226</y>
+		<x>1739</x>
+	</point>
+	<point id="137">
+		<y>2227</y>
+		<x>3272</x>
+	</point>
+	<point id="138">
+		<y>2229</y>
+		<x>2413</x>
+	</point>
+	<point id="139">
+		<y>2235</y>
+		<x>1297</x>
+	</point>
+	<point id="140">
+		<y>2254</y>
+		<x>938</x>
+	</point>
+	<point id="141">
+		<y>2263</y>
+		<x>655</x>
+	</point>
+	<point id="142">
+		<y>2264</y>
+		<x>158</x>
+	</point>
+	<point id="143">
+		<y>2268</y>
+		<x>2272</x>
+	</point>
+	<point id="144">
+		<y>2269</y>
+		<x>762</x>
+	</point>
+	<point id="145">
+		<y>2271</y>
+		<x>900</x>
+	</point>
+	<point id="146">
+		<y>2280</y>
+		<x>2165</x>
+	</point>
+	<point id="147">
+		<y>2280</y>
+		<x>2335</x>
+	</point>
+	<point id="148">
+		<y>2281</y>
+		<x>2401</x>
+	</point>
+	<point id="149">
+		<y>2284</y>
+		<x>2248</x>
+	</point>
+	<point id="150">
+		<y>2284</y>
+		<x>2703</x>
+	</point>
+	<point id="151">
+		<y>2294</y>
+		<x>2757</x>
+	</point>
+	<point id="152">
+		<y>2302</y>
+		<x>1371</x>
+	</point>
+	<point id="153">
+		<y>2304</y>
+		<x>1607</x>
+	</point>
+	<point id="154">
+		<y>2310</y>
+		<x>877</x>
+	</point>
+	<point id="155">
+		<y>2310</y>
+		<x>1084</x>
+	</point>
+	<point id="156">
+		<y>2312</y>
+		<x>762</x>
+	</point>
+	<point id="157">
+		<y>2313</y>
+		<x>1310</x>
+	</point>
+	<point id="158">
+		<y>2317</y>
+		<x>2736</x>
+	</point>
+	<point id="159">
+		<y>2318</y>
+		<x>105</x>
+	</point>
+	<point id="160">
+		<y>2320</y>
+		<x>220</x>
+	</point>
+	<point id="161">
+		<y>2333</y>
+		<x>625</x>
+	</point>
+	<point id="162">
+		<y>2348</y>
+		<x>2918</x>
+	</point>
+	<point id="163">
+		<y>2351</y>
+		<x>1977</x>
+	</point>
+	<point id="164">
+		<y>2353</y>
+		<x>2643</x>
+	</point>
+	<point id="165">
+		<y>2355</y>
+		<x>1884</x>
+	</point>
+	<point id="166">
+		<y>2355</y>
+		<x>2368</x>
+	</point>
+	<point id="167">
+		<y>2357</y>
+		<x>2121</x>
+	</point>
+	<point id="168">
+		<y>2359</y>
+		<x>2296</x>
+	</point>
+	<point id="169">
+		<y>2363</y>
+		<x>2407</x>
+	</point>
+	<point id="170">
+		<y>2365</y>
+		<x>2215</x>
+	</point>
+	<point id="171">
+		<y>2368</y>
+		<x>2146</x>
+	</point>
+	<point id="172">
+		<y>2375</y>
+		<x>1688</x>
+	</point>
+	<point id="173">
+		<y>2376</y>
+		<x>159</x>
+	</point>
+	<point id="174">
+		<y>2377</y>
+		<x>1817</x>
+	</point>
+	<point id="175" >
+		<y>2379</y>
+		<x>625</x>
+		<name>Multi-Purpous North Door</name>
+	</point>
+	<point id="176">
+		<y>2392</y>
+		<x>3162</x>
+	</point>
+	<point id="177">
+		<y>2417</y>
+		<x>2947</x>
+	</point>
+	<point id="178">
+		<y>2448</y>
+		<x>1971</x>
+	</point>
+	<point id="179">
+		<y>2478</y>
+		<x>2624</x>
+	</point>
+	<point id="180">
+		<y>2478</y>
+		<x>3008</x>
+	</point>
+	<point id="181">
+		<y>2481</y>
+		<x>1550</x>
+	</point>
+	<point id="182">
+		<y>2483</y>
+		<x>1993</x>
+	</point>
+	<point id="183">
+		<y>2493</y>
+		<x>2663</x>
+	</point>
+	<point id="184">
+		<y>2526</y>
+		<x>2674</x>
+	</point>
+	<point id="185">
+		<y>2530</y>
+		<x>3224</x>
+	</point>
+	<point id="186">
+		<y>2538</y>
+		<x>2973</x>
+	</point>
+	<point id="187">
+		<y>2539</y>
+		<x>2988</x>
+	</point>
+	<point id="188">
+		<y>2543</y>
+		<x>2350</x>
+	</point>
+	<point id="189">
+		<y>2566</y>
+		<x>2406</x>
+	</point>
+	<point id="190">
+		<y>2581</y>
+		<x>1436</x>
+	</point>
+	<point id="191">
+		<y>2599</y>
+		<x>944</x>
+	</point>
+	<point id="192">
+		<y>2609</y>
+		<x>2781</x>
+	</point>
+	<point id="193">
+		<y>2611</y>
+		<x>2127</x>
+		<gps>
+			<longitude>113.069375</longitude>
+			<latitude>37.674511</latitude>
+		</gps>
+	</point>
+	<point id="194">
+		<y>2612</y>
+		<x>3286</x>
+	</point>
+	<point id="195">
+		<y>2620</y>
+		<x>2997</x>
+	</point>
+	<point id="196">
+		<y>2621</y>
+		<x>3200</x>
+	</point>
+	<point id="197">
+		<y>2625</y>
+		<x>3069</x>
+	</point>
+	<point id="198">
+		<y>2631</y>
+		<x>2604</x>
+	</point>
+	<point id="199">
+		<y>2640</y>
+		<x>2458</x>
+	</point>
+	<point id="200">
+		<y>2654</y>
+		<x>2630</x>
+	</point>
+	<point id="201">
+		<y>2669</y>
+		<x>941</x>
+	</point>
+	<point id="202">
+		<y>2678</y>
+		<x>662</x>
+	</point>
+	<point id="203">
+		<y>2684</y>
+		<x>2196</x>
+	</point>
+	<point id="204">
+		<y>2738</y>
+		<x>2915</x>
+	</point>
+	<point id="205">
+		<y>2745</y>
+		<x>2475</x>
+	</point>
+	<point id="206">
+		<y>2748</y>
+		<x>2349</x>
+	</point>
+	<point id="207">
+		<y>2749</y>
+		<x>2619</x>
+	</point>
+	<point id="208">
+		<y>2753</y>
+		<x>2122</x>
+	</point>
+	<point id="209">
+		<y>2764</y>
+		<x>1435</x>
+	</point>
+	<point id="210">
+		<y>2877</y>
+		<x>1595</x>
+	</point>
+	<point id="211">
+		<y>2879</y>
+		<x>1371</x>
+	</point>
+	<point id="212">
+		<y>2895</y>
+		<x>3285</x>
+	</point>
+	<point id="213">
+		<y>2971</y>
+		<x>3280</x>
+	</point>
+	<point id="214">
+		<y>3026</y>
+		<x>1104</x>
+	</point>
+	<point id="215">
+		<y>3148</y>
+		<x>1337</x>
+	</point>
+	<point id="216">
+		<y>3160</y>
+		<x>1279</x>
+	</point>
+	<point id="217">
+		<y>3214</y>
+		<x>1312</x>
+	</point>
+	<point id="218">
+		<y>3396</y>
+		<x>1292</x>
+	</point>
+	<point id="219">
+		<y>3608</y>
+		<x>1309</x>
+	</point>
+	<point id="220">
+		<y>3621</y>
+		<x>1053</x>
+	</point>
+</place>
