@@ -18,11 +18,14 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        img = getImage(Rect(1000,200,1000+width,200+height))
+
+        img = getImage(Rect(
+            place.get_cur_x()-width/2,place.get_cur_y()-height/2,
+            place.get_cur_x()+width/2,place.get_cur_y()+height/2)
+        )
         canvas?.drawBitmap(img,null,
             Rect(0,0,width,height),Paint(ANTI_ALIAS_FLAG))
     }
-
     fun getImage(rect : Rect):Bitmap{
         val decoder = BitmapRegionDecoder.newInstance(
             context.resources.openRawResource( + R.drawable.suu),

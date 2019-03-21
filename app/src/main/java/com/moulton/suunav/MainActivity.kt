@@ -30,11 +30,14 @@ class MainActivity : AppCompatActivity() {
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
 
+            val c = this.baseContext
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(p0: LocationResult?) {
                     super.onLocationResult(p0)
                     p0 ?: return
                     place.cur_location = p0.lastLocation
+                    map.invalidate()
+                    Toast.makeText(c, "Got a location!", Toast.LENGTH_SHORT).show()
                 }
             }
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)

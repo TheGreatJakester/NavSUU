@@ -36,7 +36,7 @@ class PlaceParser(val c : Context) {
         //
         while(pointParser.eventType != XmlPullParser.END_DOCUMENT ){
             if(pointParser.next() == XmlPullParser.START_TAG){
-                if (pointParser.name == "Point"){
+                if (pointParser.name == "point"){
                     id = pathParser.idAttribute.toInt()
                     //parse the rest of the point
 
@@ -82,16 +82,16 @@ class PlaceParser(val c : Context) {
                         pointParser.next()
                     }
 
-                }
-                //Do something with the data parsed.
-                graph.points.add(Point(id,x,y,name))
-                if(long != null){
-                    if(long_1 == 0.0){
-                        long_1 = long
-                        cx_1 = x
-                    } else {
-                        long_2 = long
-                        cx_2 = x
+                    //Do something with the data parsed.
+                    graph.points.add(Point(id,x,y,name))
+                    if(long != null){
+                        if(long_1 == 0.0){
+                            long_1 = long
+                            cx_1 = x
+                        } else {
+                            long_2 = long
+                            cx_2 = x
+                        }
                     }
                 }
 
