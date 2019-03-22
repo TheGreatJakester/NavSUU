@@ -16,79 +16,18 @@ class PlaceParser(val c : Context) {
             >
         >()
 
-        // parse points
-        var id : Int = 0
-        var x : Int = 0
-        var y : Int = 0
-        var name : String? = null
-        var long : Double? = null
-        var lat : Double? = null
-
-        while(pointParser.eventType != XmlPullParser.END_DOCUMENT ){
-            if(pointParser.eventType == XmlPullParser.END_TAG && pointParser.name == "place"){
-                break
+        while(pointParser.next() != XmlPullParser.END_TAG){
+            if(pointParser.eventType != XmlPullParser.START_TAG){
+                continue
             }
-            while (!(pointParser.eventType == XmlPullParser.START_TAG && pointParser.name == "point")){
-                pointParser.next()
-            }
-
-
-            if(pointParser.eventType == XmlPullParser.START_TAG && pointParser.name == "point"){
-                for( attrIndex in 0 ..(pointParser.attributeCount-1) ){
-                    if (pointParser.getAttributeName(attrIndex) == "id"){
-                        id = pointParser.getAttributeValue(attrIndex).toInt()
-                    }
-                }
-                pointParser.next()
-                while(true) {
-                    var elementName = pointParser.name
-                    //advance to text
-                    pointParser.next()
-                    when (elementName) {
-                        "x" -> x = pointParser.text.toInt()
-                        "y" -> y = pointParser.text.toInt()
-                        "name" -> name = pointParser.text
-                        "gps" -> {
-                            while (true) {
-                                elementName = pointParser.name
-                                pointParser.next()
-                                when (elementName) {
-                                    "longitude" -> long = pointParser.text.toDouble()
-                                    "latitude" -> lat = pointParser.text.toDouble()
-                                }
-                                //go to end
-                                pointParser.next()
-                                // got to next tag unless its the end...
-                                if(pointParser.next() == XmlPullParser.END_TAG && pointParser.name == "gps"){
-                                    pointParser.next()
-                                    break
-                                }
-                            }
-                        }
-                    }
-                    //advance to end tag
-                    pointParser.next()
-                    //advance to start of next tag
-                    pointParser.next()
-                    //but make sure that isn't actualy the next tag.
-                    if(pointParser.eventType == XmlPullParser.END_TAG && pointParser.name == "point"){
-                        pointParser.next()
-                        break
-                    }
-                }
-                //Do something with the data parsed.
-                graph.points.add(Point(id,x,y,name))
-                if(long != null || lat != null){
-                    gpsPoint.add(
-                        Pair(
-                            Pair(long!!,lat!!),
-                            Pair(x,y)
-                        )
-                    )
+            if(pointParser.name == "point"){
+                val (point,gps) = parsePoint(pointParser)
+                graph.points.add(point)
+                if(gps != null){
+                    gpsPoint.add(gps)
                 }
             }
         }
-
 
         while(pathParser.eventType != XmlPullParser.END_DOCUMENT){
             if(pathParser.next() == XmlPullParser.START_TAG){
@@ -124,11 +63,59 @@ class PlaceParser(val c : Context) {
         return Place(graph,trasforms)
     }
 
-    private fun scale(a1 : Double, a2 : Double, b1 : Double, b2 : Double):Double{
-        return (a1-b1) / (a2 - b2)
+    private fun parsePoint(pointParser: XmlPullParser) :
+            Pair<Point,
+                Pair<
+                    Pair<Double,Double>,
+                    Pair<Int,Int>
+                >?
+            > {
+        pointParser.require(XmlPullParser.START_TAG, "", "point")
+        var id : Int = -1
+        for (attrIndex in 0..pointParser.attributeCount-1){
+            if( pointParser.getAttributeName(attrIndex) == "id"){
+                id = pointParser.getAttributeValue(attrIndex).toInt()
+            }
+        }
+        var x: Int = 0
+        var y: Int = 0
+        var name: String? = null
+        var gps: Pair<Double, Double>? = null
+
+        while (pointParser.next() != XmlPullParser.END_TAG) {
+            when (pointParser.name) {
+                "x" -> x = readText(pointParser).toInt()
+                "y" -> y = readText(pointParser).toInt()
+                "name" -> name = readText(pointParser)
+                "gps" -> gps = parseGPS(pointParser)
+            }
+        }
+        if(gps != null) {
+            return Pair(Point(id, x, y, name), Pair(gps, Pair(x, y)))
+        } else {
+            return Pair(Point(id!!, x, y, name), null )
+        }
     }
 
-    private fun offSet(a : Double, b : Double, s : Double) : Double {
-       return b - a*s
+    private fun readText(parser: XmlPullParser) : String{
+        var out = ""
+        if(parser.next() == XmlPullParser.TEXT){
+            out =  parser.text
+            parser.nextTag()
+        }
+        return out
+    }
+
+    private fun parseGPS(pointParser: XmlPullParser): Pair<Double, Double>? {
+        pointParser.require(XmlPullParser.START_TAG, "", "gps")
+        var long : Double = 0.0
+        var lat : Double = 0.0
+        while (pointParser.next() != XmlPullParser.END_TAG) {
+            when (pointParser.name) {
+                "longitude" -> long = readText(pointParser).toDouble()
+                "latitude" -> lat = readText(pointParser).toDouble()
+            }
+        }
+        return Pair(long,lat)
     }
 }
