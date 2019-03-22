@@ -9,114 +9,25 @@ class PlaceParser(val c : Context) {
         val pointParser = c.resources.getXml(pointId)
         val pathParser = c.resources.getXml(pathId)
 
+        val gpsPoint = mutableListOf<
+            Pair<
+                Pair<Double,Double>,
+                Pair<Int,Int>
+            >
+        >()
 
-        // parse points
-        var id : Int = 0
-        var x : Int = 0
-        var y : Int = 0
-        var name : String? = null
-
-        var long : Double? = null
-        var lat : Double? = null
-
-        var long_1 : Double = 0.0
-        var lat_1 : Double = 0.0
-
-        var cx_1 : Int = 0
-        var cy_1 : Int = 0
-
-        var long_2 : Double = 0.0
-        var lat_2 : Double = 0.0
-
-        var cx_2 : Int = 0
-        var cy_2 : Int = 0
-
-
-
-        //
-        while(pointParser.eventType != XmlPullParser.END_DOCUMENT ){
-            if(pointParser.next() == XmlPullParser.START_TAG){
-                if (pointParser.name == "point"){
-                    id = pathParser.idAttribute.toInt()
-                    //parse the rest of the point
-
-                    //while we haven't hit the end of the place tag...
-                    while(pointParser.next() == XmlPullParser.START_TAG){
-                        when(pointParser.name){
-                            "x" -> {
-                                if(pointParser.next() == XmlPullParser.TEXT){
-                                    x = pointParser.text.toInt()
-                                    // go to end tag
-                                    pointParser.next()
-                                }
-                            }
-                            "y" -> {
-                                if(pointParser.next() == XmlPullParser.TEXT){
-                                    y = pointParser.text.toInt()
-                                }
-                            }
-                            "name" -> {
-                                if(pointParser.next() == XmlPullParser.TEXT){
-                                    name = pointParser.text
-                                }
-                            }
-                            "GPS" -> {
-                                while(pointParser.next() == XmlPullParser.START_TAG) {
-                                    when (pathParser.name) {
-                                        "longitude" -> {
-                                            if (pointParser.next() == XmlPullParser.TEXT) {
-                                                long = pointParser.text.toDouble()
-                                            }
-                                        }
-                                        "latitude" -> {
-                                            if (pointParser.next() == XmlPullParser.TEXT) {
-                                                lat = pointParser.text.toDouble()
-                                            }
-                                        }
-                                    }
-                                    //advance to end
-                                    pointParser.next()
-                                }
-                            }
-                        }
-                        pointParser.next()
-                    }
-
-                    //Do something with the data parsed.
-                    graph.points.add(Point(id,x,y,name))
-                    if(long != null){
-                        if(long_1 == 0.0){
-                            long_1 = long
-                            cx_1 = x
-                        } else {
-                            long_2 = long
-                            cx_2 = x
-                        }
-                    }
+        while(pointParser.next() != XmlPullParser.END_TAG){
+            if(pointParser.eventType != XmlPullParser.START_TAG){
+                continue
+            }
+            if(pointParser.name == "point"){
+                val (point,gps) = parsePoint(pointParser)
+                graph.points.add(point)
+                if(gps != null){
+                    gpsPoint.add(gps)
                 }
-
-                if(lat != null){
-                    if(lat_1 == 0.0){
-                        lat_1 = lat
-                        cy_1 = y
-                    } else {
-                        lat_2 = lat
-                        cy_2 = y
-                    }
-                }
-
-                //reset some that probably won't get rewriten
-                name = null
-                lat = null
-                long = null
             }
         }
-        val x_scale = scale(long_1,cx_1.toDouble(),long_2,cx_2.toDouble())
-        val y_scale = scale(lat_1,cy_1.toDouble(),lat_2,cy_2.toDouble())
-
-        val x_offset = offSet(cx_1.toDouble(),long_1,x_scale)
-        val y_offset = offSet(cy_1.toDouble(),lat_1,y_scale)
-        //parse the paths
 
         while(pathParser.eventType != XmlPullParser.END_DOCUMENT){
             if(pathParser.next() == XmlPullParser.START_TAG){
@@ -135,14 +46,76 @@ class PlaceParser(val c : Context) {
             }
         }
 
-        return Place(graph,x_scale,y_scale,x_offset,y_offset)
+        //calculate matrix.
+        val long_list = gpsPoint.map { it.first.first }.toDoubleArray()
+        val lat_list = gpsPoint.map { it.first.second }.toDoubleArray()
+
+        val x_list = gpsPoint.map { it.second.first.toDouble() }.toDoubleArray()
+        val y_list = gpsPoint.map { it.second.second.toDouble() }.toDoubleArray()
+
+        val coords = arrayOf(long_list,lat_list)
+
+        val lat_transform = multipleRegression(x_list,coords)
+        val long_transform = multipleRegression(y_list,coords)
+
+        val trasforms = arrayOf(long_transform,lat_transform)
+
+        return Place(graph,trasforms)
     }
 
-    private fun scale(a1 : Double, a2 : Double, b1 : Double, b2 : Double):Double{
-        return (a1-b1) / (a2 - b2)
+    private fun parsePoint(pointParser: XmlPullParser) :
+            Pair<Point,
+                Pair<
+                    Pair<Double,Double>,
+                    Pair<Int,Int>
+                >?
+            > {
+        pointParser.require(XmlPullParser.START_TAG, "", "point")
+        var id : Int = -1
+        for (attrIndex in 0..pointParser.attributeCount-1){
+            if( pointParser.getAttributeName(attrIndex) == "id"){
+                id = pointParser.getAttributeValue(attrIndex).toInt()
+            }
+        }
+        var x: Int = 0
+        var y: Int = 0
+        var name: String? = null
+        var gps: Pair<Double, Double>? = null
+
+        while (pointParser.next() != XmlPullParser.END_TAG) {
+            when (pointParser.name) {
+                "x" -> x = readText(pointParser).toInt()
+                "y" -> y = readText(pointParser).toInt()
+                "name" -> name = readText(pointParser)
+                "gps" -> gps = parseGPS(pointParser)
+            }
+        }
+        if(gps != null) {
+            return Pair(Point(id, x, y, name), Pair(gps, Pair(x, y)))
+        } else {
+            return Pair(Point(id!!, x, y, name), null )
+        }
     }
 
-    private fun offSet(a : Double, b : Double, s : Double) : Double {
-       return b - a*s
+    private fun readText(parser: XmlPullParser) : String{
+        var out = ""
+        if(parser.next() == XmlPullParser.TEXT){
+            out =  parser.text
+            parser.nextTag()
+        }
+        return out
+    }
+
+    private fun parseGPS(pointParser: XmlPullParser): Pair<Double, Double>? {
+        pointParser.require(XmlPullParser.START_TAG, "", "gps")
+        var long : Double = 0.0
+        var lat : Double = 0.0
+        while (pointParser.next() != XmlPullParser.END_TAG) {
+            when (pointParser.name) {
+                "longitude" -> long = readText(pointParser).toDouble()
+                "latitude" -> lat = readText(pointParser).toDouble()
+            }
+        }
+        return Pair(long,lat)
     }
 }

@@ -11,14 +11,15 @@ import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    lateinit var place : Place
+    //lateinit var place : Place
     lateinit var fusedLocationClient : FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        place = PlaceParser(this).parse(R.xml.points,R.xml.paths)
-        map.place = place
+        //place =
+        PlaceParser(this).parse(R.xml.points,R.xml.paths)
+        //map.place = place
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onLocationResult(p0: LocationResult?) {
                     super.onLocationResult(p0)
                     p0 ?: return
-                    place.cur_location = p0.lastLocation
+                    //place.cur_location = p0.lastLocation
                     map.invalidate()
                     Toast.makeText(c, "Got a location!", Toast.LENGTH_SHORT).show()
                 }

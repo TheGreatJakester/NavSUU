@@ -4,35 +4,26 @@ import android.location.Location
 
 class Place(
     val graph:Graph,
-    val x_scale : Double,
-    val y_scale : Double,
-    val x_offset : Double,
-    val y_offset : Double
+    val transformation:Matrix
 ) {
     var cur_location : Location? = null
 
     fun get_cur_x() : Int{
         cur_location ?: return 0
-        return longToX(cur_location!!.longitude)
+        return Math.round(
+            (transformation * arrayOf(getCoord()))[0][0]
+        ).toInt()
     }
+
     fun get_cur_y() : Int{
         cur_location ?: return 0
-        return latToY(cur_location!!.latitude)
+        return Math.round(
+            (transformation * arrayOf(getCoord()))[0][1]
+        ).toInt()
     }
 
-    fun xToLong(x:Int) : Double{
-        return x*x_scale + x_offset
+    fun getCoord() : Vector {
+        return doubleArrayOf(cur_location?.longitude ?: 0.0,cur_location?.latitude ?: 0.0)
     }
-    fun yToLat(y:Int) : Double{
-        return y*y_scale + y_offset
-
-    }
-    fun longToX(long:Double): Int{
-        return Math.round( (long - x_offset) / x_scale ).toInt()
-    }
-    fun latToY(lat : Double): Int{
-        return Math.round( (lat - y_offset) / y_scale ).toInt()
-    }
-
 
 }
