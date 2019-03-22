@@ -45,18 +45,25 @@ class PlaceParser(val c : Context) {
                 pathParser.next()
             }
         }
-
-        //calculate matrix.
+        
+        //TODO implment your own way to get a matrix...
         val long_list = gpsPoint.map { it.first.first }.toDoubleArray()
         val lat_list = gpsPoint.map { it.first.second }.toDoubleArray()
 
         val x_list = gpsPoint.map { it.second.first.toDouble() }.toDoubleArray()
         val y_list = gpsPoint.map { it.second.second.toDouble() }.toDoubleArray()
 
-        val coords = arrayOf(long_list,lat_list)
+        val lat_transform = multipleRegression(y_list, arrayOf(
+            long_list,
+            lat_list,
+            DoubleArray(lat_list.size){1.0})
+        )
 
-        val lat_transform = multipleRegression(x_list,coords)
-        val long_transform = multipleRegression(y_list,coords)
+        val long_transform = multipleRegression(x_list, arrayOf(
+            long_list,
+            lat_list,
+            DoubleArray(lat_list.size){1.0})
+        )
 
         val trasforms = arrayOf(long_transform,lat_transform)
 
