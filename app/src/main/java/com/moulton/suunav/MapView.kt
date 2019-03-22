@@ -28,7 +28,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
                     place.get_cur_x() + width / 2, place.get_cur_y() + height / 2
                 )
             )
-
             canvas?.drawBitmap(
                 img, null,
                 Rect(0, 0, width, height), Paint(ANTI_ALIAS_FLAG)

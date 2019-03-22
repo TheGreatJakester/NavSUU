@@ -10,20 +10,18 @@ class Place(
 
     fun get_cur_x() : Int{
         cur_location ?: return 0
-        return Math.round(
-            (transformation * arrayOf(getCoord()))[0][0]
-        ).toInt()
+        val transform = transformation * arrayOf(getCoord()).transpose()
+        return Math.round(transform[0][0]).toInt()
     }
 
     fun get_cur_y() : Int{
         cur_location ?: return 0
-        return Math.round(
-            (transformation * arrayOf(getCoord()))[0][1]
-        ).toInt()
+        val transform = transformation * arrayOf(getCoord()).transpose()
+        return Math.round(transform[1][0]).toInt()
     }
 
     fun getCoord() : Vector {
-        return doubleArrayOf(cur_location?.longitude ?: 0.0,cur_location?.latitude ?: 0.0)
+        return doubleArrayOf(cur_location?.longitude ?: 0.0,cur_location?.latitude ?: 0.0 , 1.0)
     }
 
 }

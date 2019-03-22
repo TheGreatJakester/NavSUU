@@ -47,25 +47,31 @@ class PlaceParser(val c : Context) {
         }
         
         //TODO implment your own way to get a matrix...
-        val long_list = gpsPoint.map { it.first.first }.toDoubleArray()
-        val lat_list = gpsPoint.map { it.first.second }.toDoubleArray()
 
-        val x_list = gpsPoint.map { it.second.first.toDouble() }.toDoubleArray()
-        val y_list = gpsPoint.map { it.second.second.toDouble() }.toDoubleArray()
+        var trasforms : Matrix = arrayOf(doubleArrayOf())
+        //TODO, throw error
+        if(gpsPoint.size >= 2){
+            val p1 = gpsPoint[0]
+            val p2 = gpsPoint[1]
+            var longSlope = p1.second.first - p2.second.first / p1.first.first - p2.first.first
+            var longOffset = p1.second.first - longSlope * p1.first.first
 
-        val lat_transform = multipleRegression(y_list, arrayOf(
-            long_list,
-            lat_list,
-            DoubleArray(lat_list.size){1.0})
-        )
+            var latSlope = p1.second.second - p2.second.second / p1.first.second - p2.first.second
+            var latOffset = p1.second.second - latSlope * p1.first.second
 
-        val long_transform = multipleRegression(x_list, arrayOf(
-            long_list,
-            lat_list,
-            DoubleArray(lat_list.size){1.0})
-        )
-
-        val trasforms = arrayOf(long_transform,lat_transform)
+            trasforms = arrayOf(
+                doubleArrayOf(
+                    longSlope,
+                    0.0, //you could use this to control rotation, if needed
+                    longOffset
+                ),
+                doubleArrayOf(
+                    0.0,
+                    latSlope,
+                    latOffset
+                )
+            )
+        } // elese { error }
 
         return Place(graph,trasforms)
     }

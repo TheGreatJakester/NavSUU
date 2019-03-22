@@ -5,6 +5,8 @@ package com.moulton.suunav
 typealias Vector = DoubleArray
 typealias Matrix = Array<Vector>
 
+
+//This says that each vector is a row.
 operator fun Matrix.times(other: Matrix): Matrix {
     val rows1 = this.size
     val cols1 = this[0].size
@@ -90,6 +92,12 @@ fun Matrix.toReducedRowEchelonForm() {
 fun printVector(v: Vector) {
     println(v.asList())
     println()
+}
+
+fun printMatrix(m: Matrix){
+    for( v in m){
+        printVector(v)
+    }
 }
 
 fun multipleRegression(y: Vector, x: Matrix): Vector {
