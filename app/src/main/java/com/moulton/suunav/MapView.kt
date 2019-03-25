@@ -11,23 +11,20 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
     lateinit var place:Place
     lateinit var img : Bitmap
-    var imgHeight : Int = -1
-    var imgWidth : Int = -1
     private lateinit var screenRect : Rect
     private lateinit var focusRect: Rect
-
+    private var imgRect : Rect
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
             screenRect = Rect(0,0,width,height)
             focusRect = Rect(0,0,width,height)
         }
-        val options = BitmapFactory.Options().apply {
+        val sizeOptions = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
-        BitmapFactory.decodeResource(context.resources,R.drawable.suu,options)
-        imgHeight = options.outHeight
-        imgWidth = options.outWidth
+        BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
+        imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -50,19 +47,9 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     }
     fun getImage(rect : Rect):Bitmap{
         //make sure that we have some information about the image
-        if(rect.left < 0){
-            rect.left = 0
+        if(!imgRect.contains(rect)){
+            focusRect.set(screenRect)
         }
-        if (rect.top < 0){
-            rect.top = 0
-        }
-        if(rect.right >= imgWidth){
-            rect.right = imgWidth
-        }
-        if(rect.bottom >= imgHeight){
-            rect.bottom = imgHeight
-        }
-
         val decoder = BitmapRegionDecoder.newInstance(
             context.resources.openRawResource( + R.drawable.suu),
             false
