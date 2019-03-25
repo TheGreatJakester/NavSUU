@@ -83,7 +83,7 @@
 		<x>3260</x>
 		<gps>
 			<latitude>37.676708</latitude>
-			<longitude>113.066981</longitude>
+			<longitude>-113.066981</longitude>
 		</gps>
 	</point>
 	<point id="21">
@@ -462,7 +462,7 @@
 		<y>1955</y>
 		<x>1740</x>
 		<gps>
-			<longitude>113.070181</longitude>
+			<longitude>-113.070181</longitude>
 			<latitude>37.675597</latitude>
 		</gps>
 	</point>
@@ -792,7 +792,7 @@
 		<y>2611</y>
 		<x>2127</x>
 		<gps>
-			<longitude>113.069375</longitude>
+			<longitude>-113.069375</longitude>
 			<latitude>37.674511</latitude>
 		</gps>
 	</point>
