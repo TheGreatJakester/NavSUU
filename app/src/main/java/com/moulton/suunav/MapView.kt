@@ -7,51 +7,37 @@ import android.util.AttributeSet
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.view.Display
-
+import android.view.ViewTreeObserver
 
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
+    lateinit var screenRect : Rect
     lateinit var place:Place
     lateinit var img : Bitmap
-    var imgHeight : Int = -1
-    var imgWidth : Int = -1
 
+    val focusRect = Rect()
+    val imgPaint = Paint(ANTI_ALIAS_FLAG)
+
+    init{
+        viewTreeObserver.addOnGlobalLayoutListener {
+            screenRect = Rect(0,0,width,height)
+        }
+    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
+        setDimensions()
         if(place.cur_location != null) {
-            img = getImage(
-                Rect(
-                    place.get_cur_x() - width / 2, place.get_cur_y() - height / 2,
-                    place.get_cur_x() + width / 2, place.get_cur_y() + height / 2
-                )
-            )
+            updateFocusRect()
+            img = getImage(focusRect)
             canvas?.drawBitmap(
                 img, null,
-                Rect(0, 0, width, height), Paint(ANTI_ALIAS_FLAG)
+                screenRect, imgPaint
             )
         }
     }
     fun getImage(rect : Rect):Bitmap{
-        //make sure that we have some information about the image
-        if(imgHeight == -1 || imgWidth == -1){
-            setDimensions()
-        }
-        if(rect.left < 0){
-            rect.left = 0
-        }
-        if (rect.top < 0){
-            rect.top = 0
-        }
-        if(rect.right >= imgWidth){
-            rect.right = imgWidth
-        }
-        if(rect.bottom >= imgHeight){
-            rect.bottom = imgHeight
-        }
-
         val decoder = BitmapRegionDecoder.newInstance(
             context.resources.openRawResource( + R.drawable.suu),
             false
@@ -61,14 +47,33 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
             outHeight = height
         })
     }
+    fun updateFocusRect(){
+        focusRect.apply {
+            left = place.get_cur_x() - width / 2
+            top = place.get_cur_y() - height / 2
+            right = place.get_cur_x() + width / 2
+            bottom = place.get_cur_y() + height / 2
+
+        }
+    }
     fun setDimensions(){
+        /*
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
         BitmapFactory.decodeResource(context.resources,R.drawable.suu,options)
         imgHeight = options.outHeight
         imgWidth = options.outWidth
+        */
+
+
+
+
+        screenRect.apply {
+            top = 0
+            left = 0
+            right = width
+            bottom = height
+        }
     }
-
-
 }
