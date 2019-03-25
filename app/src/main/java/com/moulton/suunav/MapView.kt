@@ -14,10 +14,12 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     var imgHeight : Int = -1
     var imgWidth : Int = -1
     lateinit var screenRect : Rect
+    lateinit var focusRect: Rect
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
             screenRect = Rect(0,0,width,height)
+            focusRect = Rect(0,0,width,height)
         }
     }
 
@@ -25,17 +27,19 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         super.onDraw(canvas)
 
         if(place.cur_location != null) {
-            img = getImage(
-                Rect(
-                    place.get_cur_x() - width / 2, place.get_cur_y() - height / 2,
-                    place.get_cur_x() + width / 2, place.get_cur_y() + height / 2
-                )
-            )
+            img = getImage(focusRectToLocation())
             canvas?.drawBitmap(
                 img, null,
                 screenRect, Paint(ANTI_ALIAS_FLAG)
             )
         }
+    }
+    fun focusRectToLocation():Rect{
+        focusRect.set(
+            place.get_cur_x() - width / 2, place.get_cur_y() - height / 2,
+            place.get_cur_x() + width / 2, place.get_cur_y() + height / 2
+        )
+        return focusRect
     }
     fun getImage(rect : Rect):Bitmap{
         //make sure that we have some information about the image
