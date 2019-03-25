@@ -5,9 +5,6 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
 import android.view.View
-import kotlinx.android.synthetic.main.activity_main.*
-import android.view.Display
-
 
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
@@ -16,7 +13,13 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var img : Bitmap
     var imgHeight : Int = -1
     var imgWidth : Int = -1
+    lateinit var screenRect : Rect
 
+    init{
+        viewTreeObserver.addOnGlobalLayoutListener {
+            screenRect = Rect(0,0,width,height)
+        }
+    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -30,7 +33,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
             )
             canvas?.drawBitmap(
                 img, null,
-                Rect(0, 0, width, height), Paint(ANTI_ALIAS_FLAG)
+                screenRect, Paint(ANTI_ALIAS_FLAG)
             )
         }
     }
