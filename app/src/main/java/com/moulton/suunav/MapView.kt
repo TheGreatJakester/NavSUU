@@ -13,14 +13,21 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var img : Bitmap
     var imgHeight : Int = -1
     var imgWidth : Int = -1
-    lateinit var screenRect : Rect
-    lateinit var focusRect: Rect
+    private lateinit var screenRect : Rect
+    private lateinit var focusRect: Rect
+
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
             screenRect = Rect(0,0,width,height)
             focusRect = Rect(0,0,width,height)
         }
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeResource(context.resources,R.drawable.suu,options)
+        imgHeight = options.outHeight
+        imgWidth = options.outWidth
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -43,9 +50,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     }
     fun getImage(rect : Rect):Bitmap{
         //make sure that we have some information about the image
-        if(imgHeight == -1 || imgWidth == -1){
-            setDimensions()
-        }
         if(rect.left < 0){
             rect.left = 0
         }
@@ -68,14 +72,5 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
             outHeight = height
         })
     }
-    fun setDimensions(){
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
-        BitmapFactory.decodeResource(context.resources,R.drawable.suu,options)
-        imgHeight = options.outHeight
-        imgWidth = options.outWidth
-    }
-
 
 }
