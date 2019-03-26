@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
                     super.onLocationResult(p0)
                     p0 ?: return
                     place.cur_location = p0.lastLocation
-                    map.invalidate()
-                    Toast.makeText(c, "Got a location!", Toast.LENGTH_SHORT).show()
+                    //map.invalidate()
+                    //Toast.makeText(c, "Got a location!", Toast.LENGTH_SHORT).show()
                 }
             }
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
