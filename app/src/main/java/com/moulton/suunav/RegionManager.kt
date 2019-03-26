@@ -13,7 +13,7 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
     }
     //region is the part of the total image the view (typicaly) wants
     var region : Rect = Rect()
-        set(region : Rect){
+        set(region){
             if(imageSize.contains(region)){
                 field = region
                 this.regionSize.set(0,0,field.width(),field.height())
@@ -25,7 +25,24 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
                     offset(-bufferedRegion.left,-bufferedRegion.top)
                 }
             } else {
-                throw RuntimeException("region ( "+region.toString()+" )  isn't inside image decoder" + decoder.toString())
+                //if the region will fit in the image, move it onto the image.
+                if (region.width() < imageSize.width() && region.height() < imageSize.height()) {
+                    if(region.top < imageSize.top){
+                        region.offset(0,imageSize.top - region.top)
+                    } else if(region.bottom > imageSize.bottom){
+                        region.offset(0,imageSize.bottom - region.bottom)
+                    }
+
+                    if(region.left < imageSize.left){
+                        region.offset(imageSize.left - region.left , 0)
+                    } else if(region.right > imageSize.right){
+                        region.offset(imageSize.right - region.right,0)
+                    }
+                    //recursive
+                    this.region = region
+                } else {
+                    throw RuntimeException("region ( " + region.flattenToString() + " ) doesn't fit inside image decoder" + decoder.toString())
+                }
             }
         }
 
@@ -45,7 +62,7 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
     }
 
     fun drawRegion(canvas: Canvas,region:Rect, destination: Rect,paint: Paint){
-        this.region.set(region)
+        this.region = region
         canvas.drawBitmap(
             bufferedImage,
             regionOffset,
