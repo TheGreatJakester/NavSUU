@@ -9,11 +9,9 @@ import android.view.View
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var place:Place
-    lateinit var img : Bitmap
     private lateinit var screenRect : Rect
     private lateinit var focusRect: Rect
     private var imgRect : Rect
-
     lateinit var imageManager : RegionManager
 
     init{
@@ -26,9 +24,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         }
         BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
         imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
-
-
-
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -36,7 +31,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         setDimensions()
         if(place.cur_location != null) {
             focusRectToLocation()
-            //imageManager.drawRegion(canvas!!,focusRect,screenRect,Paint(ANTI_ALIAS_FLAG))
+            imageManager.drawRegion(canvas!!,focusRect,screenRect,Paint(ANTI_ALIAS_FLAG))
         }
     }
     fun focusRectToLocation():Rect{
