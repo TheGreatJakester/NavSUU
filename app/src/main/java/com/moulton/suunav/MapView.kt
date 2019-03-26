@@ -8,14 +8,13 @@ import android.view.View
 
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
-
     lateinit var place:Place
     lateinit var img : Bitmap
     private lateinit var screenRect : Rect
     private lateinit var focusRect: Rect
     private var imgRect : Rect
 
-    private var imageManager : RegionManager
+    lateinit var imageManager : RegionManager
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
@@ -28,13 +27,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
         imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
 
-
-        imageManager = RegionManager(
-            BitmapRegionDecoder.newInstance(
-                context.resources.openRawResource( + R.drawable.suu),
-                true
-            )
-        )
 
 
     }

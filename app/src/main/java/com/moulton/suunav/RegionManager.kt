@@ -9,26 +9,19 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
     var bufferedImage : Bitmap? = null
     var imageSize = Rect()
     init {
-        val sizeOptions = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
-        decoder.decodeRegion(Rect(),sizeOptions)
-        imageSize.set(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
+        imageSize.set(0,0,decoder.width,decoder.width)
     }
     //region is the part of the total image the view (typicaly) wants
-    var region : Rect
-        get(){
-            return this.region
-        }
+    var region : Rect = Rect()
         set(region : Rect){
             if(imageSize.contains(region)){
-                this.region = region
-                this.regionSize.set(0,0,region.width(),region.height())
-                if(!bufferedRegion.contains(region)){
+                field = region
+                this.regionSize.set(0,0,field.width(),field.height())
+                if(!bufferedRegion.contains(field)){
                     loadBuffer()
                 }
                 this.regionOffset.apply {
-                    set(region)
+                    set(field)
                     offset(-bufferedRegion.left,-bufferedRegion.top)
                 }
             } else {
