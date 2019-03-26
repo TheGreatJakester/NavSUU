@@ -3,6 +3,7 @@ package com.moulton.suunav
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -19,6 +20,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         place = PlaceParser(this).parse(R.xml.points,R.xml.paths)
         map.place = place
+        map.imageManager = RegionManager(
+            BitmapRegionDecoder.newInstance(
+                resources.openRawResource( + R.drawable.suu),
+                true
+            )
+        )
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==

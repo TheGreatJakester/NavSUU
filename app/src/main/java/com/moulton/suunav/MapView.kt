@@ -5,75 +5,45 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
 import android.view.View
-import kotlinx.android.synthetic.main.activity_main.*
-import android.view.Display
-import android.view.ViewTreeObserver
 
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
-
-    lateinit var screenRect : Rect
     lateinit var place:Place
     lateinit var img : Bitmap
+    private lateinit var screenRect : Rect
+    private lateinit var focusRect: Rect
+    private var imgRect : Rect
 
-    val focusRect = Rect()
-    val imgPaint = Paint(ANTI_ALIAS_FLAG)
+    lateinit var imageManager : RegionManager
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
             screenRect = Rect(0,0,width,height)
+            focusRect = Rect(0,0,width,height)
         }
+        val sizeOptions = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
+        imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
+
+
+
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         setDimensions()
         if(place.cur_location != null) {
-            updateFocusRect()
-            img = getImage(focusRect)
-            canvas?.drawBitmap(
-                img, null,
-                screenRect, imgPaint
-            )
+            focusRectToLocation()
+            //imageManager.drawRegion(canvas!!,focusRect,screenRect,Paint(ANTI_ALIAS_FLAG))
         }
     }
-    fun getImage(rect : Rect):Bitmap{
-        val decoder = BitmapRegionDecoder.newInstance(
-            context.resources.openRawResource( + R.drawable.suu),
-            false
+    fun focusRectToLocation():Rect{
+        focusRect.set(
+            place.get_cur_x() - width / 2, place.get_cur_y() - height / 2,
+            place.get_cur_x() + width / 2, place.get_cur_y() + height / 2
         )
-        return decoder.decodeRegion(rect,BitmapFactory.Options().apply {
-            outWidth = width
-            outHeight = height
-        })
-    }
-    fun updateFocusRect(){
-        focusRect.apply {
-            left = place.get_cur_x() - width / 2
-            top = place.get_cur_y() - height / 2
-            right = place.get_cur_x() + width / 2
-            bottom = place.get_cur_y() + height / 2
-
-        }
-    }
-    fun setDimensions(){
-        /*
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
-        BitmapFactory.decodeResource(context.resources,R.drawable.suu,options)
-        imgHeight = options.outHeight
-        imgWidth = options.outWidth
-        */
-
-
-
-
-        screenRect.apply {
-            top = 0
-            left = 0
-            right = width
-            bottom = height
-        }
+        return focusRect
     }
 }
