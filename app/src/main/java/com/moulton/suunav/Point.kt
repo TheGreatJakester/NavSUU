@@ -2,7 +2,7 @@ package com.moulton.suunav
 
 
 data class Edge(
-    var destinationId: Point,
+    var destination: Point,
     var distance: Double
 )
 

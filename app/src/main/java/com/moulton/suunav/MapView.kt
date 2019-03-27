@@ -1,6 +1,5 @@
 package com.moulton.suunav
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
@@ -8,7 +7,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Scroller
+
 
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
@@ -18,6 +17,10 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private var imgRect : Rect
     lateinit var imageManager : RegionManager
     val imagePaint = Paint(ANTI_ALIAS_FLAG)
+    val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.BLACK
+        strokeWidth = 2f
+    }
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
@@ -31,26 +34,12 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
     }
 
-    //input handlers
-    //private val scroller = Scroller(context,null,true)
+
     private val detector : GestureDetector = GestureDetector(context,
         object : GestureDetector.SimpleOnGestureListener(){
             override fun onDown(e: MotionEvent): Boolean {
                 return true
             }
-            //TODO : Implement fling
-            /*override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-                val SCALE = 8
-                scroller.fling(
-                    focusRect.right,focusRect.top,
-                    (velocityX/SCALE).toInt(),(velocityY/SCALE).toInt(),
-                    imgRect.right, imgRect.left - screenRect.left,
-                    imgRect.top, imgRect.bottom - screenRect.bottom
-                )
-                postInvalidate()
-                return true
-            }*/
-
         }
     )
 
@@ -72,14 +61,27 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        /*scroller.apply{
-            if(!isFinished){
-                computeScrollOffset()
-                focusRect.offsetTo(currX,currY)
-            }
-        }*/
         imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
+        drawPaths(canvas!!)
     }
+    private fun drawPaths(canvas: Canvas){
+        for(point in place.graph.points){
+            if(focusRect.contains(point.x,point.y)){
+                for(edge in point.edges){
+                    var subPoint = edge.destination
+                    canvas.drawLine(
+                        (point.x - focusRect.left).toFloat(),
+                        (point.y - focusRect.top).toFloat(),
+                        (subPoint.x - focusRect.left).toFloat(),
+                        (subPoint.y - focusRect.top).toFloat(),
+                        pathPaint
+                    )
+                }
+            }
+        }
+
+    }
+
     fun focusRectToLocation():Rect{
         focusRect.set(
             place.get_cur_x() - width / 2, place.get_cur_y() - height / 2,
