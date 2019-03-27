@@ -67,8 +67,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private fun drawPaths(canvas: Canvas){
         for(point in place.graph.points){
             if(focusRect.contains(point.x,point.y)){
-                for(edge in point.edges){
-                    val subPoint = edge.destination
+                for(subPoint in point.edges.keys){
                     canvas.drawLine(
                         (point.x - focusRect.left).toFloat(),
                         (point.y - focusRect.top).toFloat(),

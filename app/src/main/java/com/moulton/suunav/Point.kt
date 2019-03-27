@@ -8,16 +8,21 @@ data class Edge(
 
 class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
 
-    var edges : MutableList<Edge> = mutableListOf()
+    var edges = HashMap<Point,Float>()
+
     fun addEdge(p :Point){
-        edges.add(
-            Edge(p, dist(p))
-        )
+        //its like... bad dynamic programming
+        edges[p] = dist(p)
     }
-    private fun dist(p :Point): Double{
+
+    fun isConectedTo(p:Point) : Boolean {
+        return this.edges.containsKey(p)
+    }
+
+    private fun dist(p :Point): Float{
         return Math.pow(
             Math.pow((x-p.x).toDouble(),2.0) +
                     Math.pow((y-p.y).toDouble(),2.0)
-            ,.5)
+            ,.5).toFloat()
     }
 }
