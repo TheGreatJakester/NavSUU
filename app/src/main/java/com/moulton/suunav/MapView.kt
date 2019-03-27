@@ -12,6 +12,7 @@ import android.view.View
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var place:Place
+    var route : List<Point>? = null
     private lateinit var screenRect : Rect
     private lateinit var focusRect: Rect
     private var imgRect : Rect
@@ -19,6 +20,10 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private val imagePaint = Paint(ANTI_ALIAS_FLAG)
     private val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
+        strokeWidth = 2f
+    }
+    private val routePaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.RED
         strokeWidth = 2f
     }
 
@@ -33,7 +38,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
         imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
     }
-
 
     private val detector : GestureDetector = GestureDetector(context,
         object : GestureDetector.SimpleOnGestureListener(){
@@ -63,6 +67,9 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         super.onDraw(canvas)
         imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
         drawPaths(canvas!!)
+        if(route != null){
+            drawRoute(canvas!!,route!!)
+        }
     }
     private fun drawPaths(canvas: Canvas){
         for(point in place.graph.points){
@@ -78,8 +85,22 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
                 }
             }
         }
-
     }
+
+    private fun drawRoute(canvas: Canvas, route: List<Point>){
+        for(pointindex in 0..(route.size-2)){
+            val point = route[pointindex]
+            val subPoint = route[pointindex+1]
+            canvas.drawLine(
+                (point.x - focusRect.left).toFloat(),
+                (point.y - focusRect.top).toFloat(),
+                (subPoint.x - focusRect.left).toFloat(),
+                (subPoint.y - focusRect.top).toFloat(),
+                routePaint
+                    )
+        }
+    }
+
 
     fun focusRectToLocation():Rect{
         focusRect.set(

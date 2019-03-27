@@ -25,7 +25,7 @@ class Place(
         return doubleArrayOf(cur_location?.longitude ?: 0.0,cur_location?.latitude ?: 0.0 , 1.0)
     }
 
-    private fun getRoute(p1 : Point , p2 : Point):List<Point>{
+    fun getRoute(p1 : Point , p2 : Point):List<Point>{
     //simple breadth first search
         //define some tools
         class PointInRoute(val point : Point) : Comparable<PointInRoute>{

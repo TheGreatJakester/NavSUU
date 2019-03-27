@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                 true
             )
         )
-
+        map.route = map.place.getRoute(place.graph.points[0],place.graph.points[5])
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
