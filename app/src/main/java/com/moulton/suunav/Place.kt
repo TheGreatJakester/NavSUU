@@ -8,19 +8,19 @@ class Place(
 ) {
     var cur_location : Location? = null
 
-    fun get_cur_x() : Int{
+    fun getCurX() : Int{
         cur_location ?: return 0
         val transform = transformation * arrayOf(getCoord()).transpose()
         return Math.round(transform[0][0]).toInt()
     }
 
-    fun get_cur_y() : Int{
+    fun getCurY() : Int{
         cur_location ?: return 0
         val transform = transformation * arrayOf(getCoord()).transpose()
         return Math.round(transform[1][0]).toInt()
     }
 
-    fun getCoord() : Vector {
+    private fun getCoord() : Vector {
         return doubleArrayOf(cur_location?.longitude ?: 0.0,cur_location?.latitude ?: 0.0 , 1.0)
     }
 

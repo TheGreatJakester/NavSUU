@@ -16,8 +16,8 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private lateinit var focusRect: Rect
     private var imgRect : Rect
     lateinit var imageManager : RegionManager
-    val imagePaint = Paint(ANTI_ALIAS_FLAG)
-    val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
+    private val imagePaint = Paint(ANTI_ALIAS_FLAG)
+    private val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         strokeWidth = 2f
     }
@@ -68,7 +68,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         for(point in place.graph.points){
             if(focusRect.contains(point.x,point.y)){
                 for(edge in point.edges){
-                    var subPoint = edge.destination
+                    val subPoint = edge.destination
                     canvas.drawLine(
                         (point.x - focusRect.left).toFloat(),
                         (point.y - focusRect.top).toFloat(),
@@ -84,8 +84,8 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
     fun focusRectToLocation():Rect{
         focusRect.set(
-            place.get_cur_x() - width / 2, place.get_cur_y() - height / 2,
-            place.get_cur_x() + width / 2, place.get_cur_y() + height / 2
+            place.getCurX() - width / 2, place.getCurY() - height / 2,
+            place.getCurX() + width / 2, place.getCurY() + height / 2
         )
         return focusRect
     }
