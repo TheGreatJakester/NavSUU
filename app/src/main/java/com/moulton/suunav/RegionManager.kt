@@ -2,30 +2,43 @@ package com.moulton.suunav
 
 import android.graphics.*
 import java.lang.RuntimeException
+import java.util.concurrent.atomic.AtomicBoolean
 
-class RegionManager(var decoder : BitmapRegionDecoder) {
-    val MARGIN = 1.5
+class RegionManager(var decoder : BitmapRegionDecoder,val nativeScreen:Rect) {
+    private val MARGIN = 1.5
+    val BUFFERING_NOW_LOCK = AtomicBoolean(false)
+    val SETTING_BUFFER_LOCK = AtomicBoolean(false)
+
+
+
     private var bufferedRegion = Rect()
-    var bufferedImage : Bitmap? = null
-    var imageSize = Rect()
-    init {
-        imageSize.set(0,0,decoder.width,decoder.width)
+    private var bufferedImage : Bitmap? = null
+    private var bufferCompairedToImage = Pair(1f,1f)
+    
+    //This rect represents where the region is on the buffer. It needs to be updated if the region or buffer changes.
+    private var bufferRegionMapping = Rect()
+    private fun updateBufferRegionMapping(){
+        bufferRegionMapping.set(
+            Math.round((region.left - bufferedRegion.left)*bufferCompairedToImage.first),
+            Math.round((region.top - bufferedRegion.top)*bufferCompairedToImage.second),
+            Math.round((bufferedRegion.right - region.right)*bufferCompairedToImage.first),
+            Math.round((bufferedRegion.bottom - region.bottom)*bufferCompairedToImage.second)
+        )
     }
-    //region is the part of the total image the view (typicaly) wants
+    var imageSize = Rect(0,0,decoder.width,decoder.height)
+
+    //region is the part of the total image the view wants
     var region : Rect = Rect()
         set(region){
+            //make sure that the image actualy has the region. If it does, set the region.
             if(imageSize.contains(region)){
                 field = region
-                this.regionSize.set(0,0,field.width(),field.height())
+                updateBufferRegionMapping()
+                //if even part of the region is outside the buffer, reload the buffer.
                 if(!bufferedRegion.contains(field)){
                     loadBuffer()
                 }
-                this.regionOffset.apply {
-                    set(field)
-                    offset(-bufferedRegion.left,-bufferedRegion.top)
-                }
             } else {
-                //if the region will fit in the image, move it onto the image.
                 if (region.width() < imageSize.width() && region.height() < imageSize.height()) {
                     if(region.top < imageSize.top){
                         region.offset(0,imageSize.top - region.top)
@@ -46,12 +59,11 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
             }
         }
 
-    //keeps the size of region
-    private var regionSize = Rect()
-    //where the region is relative to the buffered region
-    private var regionOffset = Rect()
-
     private fun loadBuffer(){
+        if(BUFFERING_NOW_LOCK.compareAndSet(false,true)){
+            //start the buffer
+        }
+        //you ready for some multi threaded goodness?
         bufferedRegion.set(
             Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
             Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
@@ -61,12 +73,27 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
         bufferedImage = decoder.decodeRegion(bufferedRegion,BitmapFactory.Options())
     }
 
-    fun drawRegion(canvas: Canvas,region:Rect, destination: Rect,paint: Paint){
+    val loadBuffer = Runnable {
+        if(BUFFERING_NOW_LOCK.compareAndSet(false,true)){
+            var newBufferedRegion = Rect(
+                Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
+                Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
+                Math.round(region.centerX() + region.width()*.5*MARGIN).toInt(),
+                Math.round(region.centerY() + region.height()*.5*MARGIN).toInt()
+            )
+            val bufferOptions = BitmapFactory.Options().apply {
+                outWidth = newBufferedRegion.width()
+                outHeight = newBufferedRegion.height()
+            }
+        }
+    }
+
+    fun drawRegion(canvas: Canvas,region:Rect, paint: Paint){
         this.region = region
         canvas.drawBitmap(
             bufferedImage,
-            regionOffset,
-            destination,
+            bufferRegionMapping,
+            nativeScreen,
             paint)
     }
 }
