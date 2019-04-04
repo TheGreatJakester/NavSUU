@@ -6,15 +6,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class RegionManager(var decoder : BitmapRegionDecoder,val nativeScreen:Rect) {
     private val MARGIN = 1.5
-    val BUFFERING_NOW_LOCK = AtomicBoolean(false)
-    val SETTING_BUFFER_LOCK = AtomicBoolean(false)
-
-
+    private val settingBuffer = AtomicBoolean(false)
 
     private var bufferedRegion = Rect()
     private var bufferedImage : Bitmap? = null
     private var bufferCompairedToImage = Pair(1f,1f)
-    
+
     //This rect represents where the region is on the buffer. It needs to be updated if the region or buffer changes.
     private var bufferRegionMapping = Rect()
     private fun updateBufferRegionMapping(){
@@ -60,40 +57,51 @@ class RegionManager(var decoder : BitmapRegionDecoder,val nativeScreen:Rect) {
         }
 
     private fun loadBuffer(){
-        if(BUFFERING_NOW_LOCK.compareAndSet(false,true)){
-            //start the buffer
-        }
-        //you ready for some multi threaded goodness?
-        bufferedRegion.set(
-            Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
-            Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
-            Math.round(region.centerX() + region.width()*.5*MARGIN).toInt(),
-            Math.round(region.centerY() + region.height()*.5*MARGIN).toInt()
-        )
-        bufferedImage = decoder.decodeRegion(bufferedRegion,BitmapFactory.Options())
+        loadBuffer.run()
+        updateBufferRegionMapping()
     }
 
     val loadBuffer = Runnable {
-        if(BUFFERING_NOW_LOCK.compareAndSet(false,true)){
-            var newBufferedRegion = Rect(
-                Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
-                Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
-                Math.round(region.centerX() + region.width()*.5*MARGIN).toInt(),
-                Math.round(region.centerY() + region.height()*.5*MARGIN).toInt()
+            val newBufferedRegion = Rect(
+                    Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
+                    Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
+                    Math.round(region.centerX() + region.width()*.5*MARGIN).toInt(),
+                    Math.round(region.centerY() + region.height()*.5*MARGIN).toInt()
             )
+        var newBufferCompairedToImage : Pair<Float,Float>
             val bufferOptions = BitmapFactory.Options().apply {
-                outWidth = newBufferedRegion.width()
-                outHeight = newBufferedRegion.height()
+                if(region.width() > nativeScreen.width() || region.height() > region.height()){
+                    //region is too big, scale down.
+                    outWidth = Math.round(nativeScreen.width() * MARGIN).toInt()
+                    outHeight = Math.round(nativeScreen.height() * MARGIN).toInt()
+                    newBufferCompairedToImage = Pair(
+                        outWidth.toFloat() / newBufferedRegion.width(),
+                        outHeight.toFloat() / newBufferedRegion.height()
+                    )
+                } else {
+                    //region is small enough, go ahead and load in all the buffer it wants
+                    outWidth = newBufferedRegion.width()
+                    outHeight = newBufferedRegion.height()
+                    newBufferCompairedToImage = Pair(1f,1f)
+                }
             }
-        }
+            val newBitmap = decoder.decodeRegion(newBufferedRegion,bufferOptions)
+            while(!settingBuffer.compareAndSet(false,true)){}//spin lock
+                this.bufferedImage = newBitmap
+                this.bufferedRegion = newBufferedRegion
+                this.bufferCompairedToImage = newBufferCompairedToImage
+            settingBuffer.set(false) //release lock
     }
 
     fun drawRegion(canvas: Canvas,region:Rect, paint: Paint){
-        this.region = region
-        canvas.drawBitmap(
-            bufferedImage,
-            bufferRegionMapping,
-            nativeScreen,
-            paint)
+        if(!settingBuffer.get()) {
+            this.region = region
+            canvas.drawBitmap(
+                bufferedImage,
+                bufferRegionMapping,
+                nativeScreen,
+                paint
+            )
+        }
     }
 }
