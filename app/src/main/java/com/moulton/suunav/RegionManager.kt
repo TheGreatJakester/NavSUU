@@ -16,7 +16,6 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
         set(region){
             if(imageSize.contains(region)){
                 field = region
-                this.regionSize.set(0,0,field.width(),field.height())
                 if(!bufferedRegion.contains(field)){
                     loadBuffer()
                 }
@@ -42,8 +41,6 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
             }
         }
 
-    //keeps the size of region
-    private var regionSize = Rect()
     //where the region is relative to the buffered region
     private var regionOnBuffer = Rect()
     get(){
