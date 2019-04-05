@@ -20,10 +20,6 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
                 if(!bufferedRegion.contains(field)){
                     loadBuffer()
                 }
-                this.regionOffset.apply {
-                    set(field)
-                    offset(-bufferedRegion.left,-bufferedRegion.top)
-                }
             } else {
                 //if the region will fit in the image, move it onto the image.
                 if (region.width() < imageSize.width() && region.height() < imageSize.height()) {
@@ -49,7 +45,12 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
     //keeps the size of region
     private var regionSize = Rect()
     //where the region is relative to the buffered region
-    private var regionOffset = Rect()
+    private var regionOnBuffer = Rect()
+    get(){
+        field.set(region)
+        field.offset(-bufferedRegion.left,-bufferedRegion.top)
+        return field
+    }
 
     private fun loadBuffer(){
         bufferedRegion.set(
@@ -65,7 +66,7 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
         this.region = region
         canvas.drawBitmap(
             bufferedImage,
-            regionOffset,
+            regionOnBuffer,
             destination,
             paint)
     }
