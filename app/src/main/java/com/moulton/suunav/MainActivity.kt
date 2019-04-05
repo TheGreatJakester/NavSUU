@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
+import android.graphics.Rect
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -24,7 +25,8 @@ class MainActivity : AppCompatActivity() {
             BitmapRegionDecoder.newInstance(
                 resources.openRawResource( + R.drawable.suu),
                 true
-            )
+            ),
+            Rect(0,0,100,100)
         )
 
 

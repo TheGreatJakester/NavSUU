@@ -14,7 +14,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var place:Place
     private lateinit var screenRect : Rect
     private lateinit var focusRect: Rect
-    private var imgRect : Rect
     lateinit var imageManager : RegionManager
     private val imagePaint = Paint(ANTI_ALIAS_FLAG)
     private val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
@@ -25,13 +24,13 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
             screenRect = Rect(0,0,width,height)
+            imageManager.nativeScreen = screenRect
             focusRect = Rect(0,0,width,height)
         }
         val sizeOptions = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
         BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
-        imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
     }
 
 
@@ -61,7 +60,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
+        imageManager.drawRegion(canvas!!,focusRect,imagePaint)
         drawPaths(canvas!!)
     }
     private fun drawPaths(canvas: Canvas){
