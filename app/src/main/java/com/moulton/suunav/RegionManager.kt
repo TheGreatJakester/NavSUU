@@ -2,11 +2,16 @@ package com.moulton.suunav
 
 import android.graphics.*
 import java.lang.RuntimeException
+import java.util.concurrent.atomic.AtomicBoolean
 
 class RegionManager(var decoder : BitmapRegionDecoder) {
     val MARGIN = 1.5
+
+    private var settingBufferLock = AtomicBoolean(false)
     private var bufferedRegion = Rect()
     var bufferedImage : Bitmap? = null
+
+
     var imageSize = Rect()
     init {
         imageSize.set(0,0,decoder.width,decoder.width)
@@ -49,22 +54,40 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
         return field
     }
 
+    private var loading = AtomicBoolean(false)
     private fun loadBuffer(){
-        bufferedRegion.set(
-            Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
-            Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
-            Math.round(region.centerX() + region.width()*.5*MARGIN).toInt(),
-            Math.round(region.centerY() + region.height()*.5*MARGIN).toInt()
-        )
-        bufferedImage = decoder.decodeRegion(bufferedRegion,BitmapFactory.Options())
+        if(loading.compareAndSet(false,true)) {
+            Thread(Runnable {
+                val newBufferedRegion = Rect(
+                    Math.round(region.centerX() - region.width() * .5 * MARGIN).toInt(),
+                    Math.round(region.centerY() - region.height() * .5 * MARGIN).toInt(),
+                    Math.round(region.centerX() + region.width() * .5 * MARGIN).toInt(),
+                    Math.round(region.centerY() + region.height() * .5 * MARGIN).toInt()
+                )
+
+                val newbufferedImage = decoder.decodeRegion(newBufferedRegion, BitmapFactory.Options())
+                while (!settingBufferLock.compareAndSet(false, true)) {
+                }//acquire lock
+                //critical code
+                bufferedRegion = newBufferedRegion
+                bufferedImage = newbufferedImage
+                settingBufferLock.set(false)//release lock
+                loading.set(false)//release lock
+            }).start()
+        }
     }
 
     fun drawRegion(canvas: Canvas,region:Rect, destination: Rect,paint: Paint){
+        while(!settingBufferLock.compareAndSet(false,true)){} // acquire lock
         this.region = region
-        canvas.drawBitmap(
-            bufferedImage,
-            regionOnBuffer,
-            destination,
-            paint)
+        if(bufferedImage != null) {
+            canvas.drawBitmap(
+                bufferedImage,
+                regionOnBuffer,
+                destination,
+                paint
+            )
+        }
+        settingBufferLock.set(false) // release lock
     }
 }
