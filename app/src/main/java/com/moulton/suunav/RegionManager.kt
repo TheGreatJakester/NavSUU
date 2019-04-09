@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 class RegionManager(var decoder : BitmapRegionDecoder) {
     val MARGIN = 1.5
 
-    private var settingBufferLock = AtomicBoolean(false)
     private var bufferedRegion = Rect()
     var bufferedImage : Bitmap? = null
 
@@ -54,7 +53,23 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
         return field
     }
 
+
+    interface OnBufferChangeListener{
+        fun onBufferChange()
+    }
+    var onBufferChange : OnBufferChangeListener? = null
+    fun setOnBufferChange(passedLamda:()->Unit){
+        this.onBufferChange = object : OnBufferChangeListener{
+            override fun onBufferChange() {
+                passedLamda()
+            }
+        }
+    }
+
+    //decalare locks
     private var loading = AtomicBoolean(false)
+    private var settingBufferLock = AtomicBoolean(false)
+    //use locks
     private fun loadBuffer(){
         if(loading.compareAndSet(false,true)) {
             Thread(Runnable {
@@ -73,6 +88,8 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
                 bufferedImage = newbufferedImage
                 settingBufferLock.set(false)//release lock
                 loading.set(false)//release lock
+                //once done, perform something.
+                onBufferChange?.onBufferChange()
             }).start()
         }
     }
