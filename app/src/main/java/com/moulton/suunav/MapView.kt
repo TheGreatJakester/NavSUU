@@ -32,6 +32,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         }
         BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
         imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
+        
     }
 
 

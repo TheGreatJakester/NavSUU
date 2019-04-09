@@ -25,7 +25,9 @@ class MainActivity : AppCompatActivity() {
                 resources.openRawResource( + R.drawable.suu),
                 true
             )
-        )
+        ).apply {
+            setOnBufferChange { map.invalidate() }
+        }
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
