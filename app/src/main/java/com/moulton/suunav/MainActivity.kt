@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                 true
             )
         ).apply {
-            setOnBufferChange { map.invalidate() }
+            setOnBufferChange { map.postInvalidate() }
         }
 
 
