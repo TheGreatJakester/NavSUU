@@ -31,6 +31,11 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         color = Color.RED
         style = Paint.Style.FILL
     }
+    private val pointTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.BLACK
+        style = Paint.Style.FILL
+        textSize = 32f
+    }
 
     init{
         viewTreeObserver.addOnGlobalLayoutListener {
@@ -73,6 +78,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         super.onDraw(canvas)
         imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
         drawPaths(canvas)
+        drawPointText(canvas)
         drawLocation(canvas)
     }
 
@@ -88,6 +94,19 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
                         pathPaint
                     )
                 }
+            }
+        }
+    }
+
+    private fun drawPointText(canvas: Canvas){
+        for(point in place.graph.points){
+            if(focusRect.contains(point.x,point.y)){
+                canvas.drawText(
+                    point.Id.toString(),
+                    (point.x - focusRect.left).toFloat(),
+                    (point.y - focusRect.top).toFloat(),
+                    pointTextPaint
+                )
             }
         }
     }
