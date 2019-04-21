@@ -5,24 +5,18 @@ import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RegionManager(var decoder : BitmapRegionDecoder) {
-    val MARGIN = 1.5
+    val MARGIN = 1.75
 
     private var bufferedRegion = Rect()
     var bufferedImage : Bitmap? = null
 
-
-    var imageSize = Rect()
-    init {
-        imageSize.set(0,0,decoder.width,decoder.width)
-    }
+    var imageSize = Rect(0,0,decoder.width,decoder.width)
     //region is the part of the total image the view (typicaly) wants
     var region : Rect = Rect()
         set(region){
             if(imageSize.contains(region)){
                 field = region
-                if(!bufferedRegion.contains(field)){
-                    loadBuffer()
-                }
+                loadBuffer()
             } else {
                 //if the region will fit in the image, move it onto the image.
                 if (region.width() < imageSize.width() && region.height() < imageSize.height()) {
