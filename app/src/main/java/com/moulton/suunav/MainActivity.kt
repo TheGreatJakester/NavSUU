@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
                 resources.openRawResource( + R.drawable.suu),
                 true
             )
+        ).apply {
+            setOnBufferChange { map.postInvalidate() }
+        }
         )
         map.route = map.place.getRoute(place.graph.points[0],place.graph.points[5])
 

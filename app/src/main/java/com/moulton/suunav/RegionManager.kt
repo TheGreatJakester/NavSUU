@@ -2,28 +2,21 @@ package com.moulton.suunav
 
 import android.graphics.*
 import java.lang.RuntimeException
+import java.util.concurrent.atomic.AtomicBoolean
 
 class RegionManager(var decoder : BitmapRegionDecoder) {
-    val MARGIN = 1.5
+    val MARGIN = 1.75
+
     private var bufferedRegion = Rect()
     var bufferedImage : Bitmap? = null
-    var imageSize = Rect()
-    init {
-        imageSize.set(0,0,decoder.width,decoder.width)
-    }
+
+    var imageSize = Rect(0,0,decoder.width,decoder.width)
     //region is the part of the total image the view (typicaly) wants
     var region : Rect = Rect()
         set(region){
             if(imageSize.contains(region)){
                 field = region
-                this.regionSize.set(0,0,field.width(),field.height())
-                if(!bufferedRegion.contains(field)){
-                    loadBuffer()
-                }
-                this.regionOffset.apply {
-                    set(field)
-                    offset(-bufferedRegion.left,-bufferedRegion.top)
-                }
+                loadBuffer()
             } else {
                 //if the region will fit in the image, move it onto the image.
                 if (region.width() < imageSize.width() && region.height() < imageSize.height()) {
@@ -46,27 +39,66 @@ class RegionManager(var decoder : BitmapRegionDecoder) {
             }
         }
 
-    //keeps the size of region
-    private var regionSize = Rect()
     //where the region is relative to the buffered region
-    private var regionOffset = Rect()
+    private var regionOnBuffer = Rect()
+    get(){
+        field.set(region)
+        field.offset(-bufferedRegion.left,-bufferedRegion.top)
+        return field
+    }
 
+
+    interface OnBufferChangeListener{
+        fun onBufferChange()
+    }
+    var onBufferChange : OnBufferChangeListener? = null
+    fun setOnBufferChange(passedLamda:()->Unit){
+        this.onBufferChange = object : OnBufferChangeListener{
+            override fun onBufferChange() {
+                passedLamda()
+            }
+        }
+    }
+
+    //decalare locks
+    private var loading = AtomicBoolean(false)
+    private var settingBufferLock = AtomicBoolean(false)
+    //use locks
     private fun loadBuffer(){
-        bufferedRegion.set(
-            Math.round(region.centerX() - region.width()*.5*MARGIN).toInt(),
-            Math.round(region.centerY() - region.height()*.5*MARGIN).toInt(),
-            Math.round(region.centerX() + region.width()*.5*MARGIN).toInt(),
-            Math.round(region.centerY() + region.height()*.5*MARGIN).toInt()
-        )
-        bufferedImage = decoder.decodeRegion(bufferedRegion,BitmapFactory.Options())
+        if(loading.compareAndSet(false,true)) {
+            Thread(Runnable {
+                val newBufferedRegion = Rect(
+                    Math.round(region.centerX() - region.width() * .5 * MARGIN).toInt(),
+                    Math.round(region.centerY() - region.height() * .5 * MARGIN).toInt(),
+                    Math.round(region.centerX() + region.width() * .5 * MARGIN).toInt(),
+                    Math.round(region.centerY() + region.height() * .5 * MARGIN).toInt()
+                )
+
+                val newbufferedImage = decoder.decodeRegion(newBufferedRegion, BitmapFactory.Options())
+                while (!settingBufferLock.compareAndSet(false, true)) {
+                }//acquire lock
+                //critical code
+                bufferedRegion = newBufferedRegion
+                bufferedImage = newbufferedImage
+                settingBufferLock.set(false)//release lock
+                loading.set(false)//release lock
+                //once done, perform something.
+                onBufferChange?.onBufferChange()
+            }).start()
+        }
     }
 
     fun drawRegion(canvas: Canvas,region:Rect, destination: Rect,paint: Paint){
+        while(!settingBufferLock.compareAndSet(false,true)){} // acquire lock
         this.region = region
-        canvas.drawBitmap(
-            bufferedImage,
-            regionOffset,
-            destination,
-            paint)
+        if(bufferedImage != null) {
+            canvas.drawBitmap(
+                bufferedImage,
+                regionOnBuffer,
+                destination,
+                paint
+            )
+        }
+        settingBufferLock.set(false) // release lock
     }
 }
