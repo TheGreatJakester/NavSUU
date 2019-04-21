@@ -17,6 +17,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private lateinit var focusRect: Rect
     private var imgRect : Rect
     lateinit var imageManager : RegionManager
+
     private val imagePaint = Paint(ANTI_ALIAS_FLAG)
     private val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
@@ -25,6 +26,10 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private val routePaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.RED
         strokeWidth = 2f
+    }
+    private val locationPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = Color.RED
+        style = Paint.Style.FILL
     }
 
     init{
@@ -67,11 +72,10 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
-        drawPaths(canvas!!)
-        if(route != null){
-            drawRoute(canvas!!,route!!)
-        }
+        drawPaths(canvas)
+        drawLocation(canvas)
     }
+
     private fun drawPaths(canvas: Canvas){
         for(point in place.graph.points){
             if(focusRect.contains(point.x,point.y)){
@@ -102,6 +106,9 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         }
     }
 
+    private fun drawLocation(canvas: Canvas){
+        canvas.drawCircle((place.getCurX()-focusRect.left).toFloat(),(place.getCurY()-focusRect.top).toFloat(),15f,locationPaint)
+    }
 
     fun focusRectToLocation():Rect{
         focusRect.set(

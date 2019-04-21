@@ -28,15 +28,14 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             setOnBufferChange { map.postInvalidate() }
         }
-        )
         map.route = map.place.getRoute(place.graph.points[0],place.graph.points[5])
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
 
             val locationRequest = LocationRequest.create()?.apply {
-                interval = 10000
-                fastestInterval = 5000
+                interval = 1000
+                fastestInterval = 500
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
 
@@ -46,8 +45,7 @@ class MainActivity : AppCompatActivity() {
                     super.onLocationResult(p0)
                     p0 ?: return
                     place.cur_location = p0.lastLocation
-                    //map.invalidate()
-                    //Toast.makeText(c, "Got a location!", Toast.LENGTH_SHORT).show()
+                    map.invalidate()
                 }
             }
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
