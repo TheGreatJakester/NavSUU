@@ -19,7 +19,7 @@ class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
         return this.edges.containsKey(p)
     }
 
-    private fun dist(p :Point): Float{
+    fun dist(p :Point): Float{
         return Math.pow(
             Math.pow((x-p.x).toDouble(),2.0) +
                     Math.pow((y-p.y).toDouble(),2.0)

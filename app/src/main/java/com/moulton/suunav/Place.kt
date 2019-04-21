@@ -7,22 +7,36 @@ class Place(
     val graph:Graph,
     val transformation:Matrix
 ) {
-    var cur_location : Location? = null
+    var curLocation: Location? = null
+
+    var nearestPoint: Point = Point(-1,-1,-1,null)
+    get(){
+        var out : Point = field
+        var curPoint = Point(-1,getCurX(),getCurY(),null)
+        var curDistance : Float = Float.MAX_VALUE
+        for(possibleNearest in graph.points){
+            if(possibleNearest.dist(curPoint) < curDistance){
+                out = possibleNearest
+                curDistance = possibleNearest.dist(curPoint)
+            }
+        }
+        return out
+    }
 
     fun getCurX() : Int{
-        cur_location ?: return 0
+        curLocation ?: return 0
         val transform = transformation * arrayOf(getCoord()).transpose()
         return Math.round(transform[0][0]).toInt()
     }
 
     fun getCurY() : Int{
-        cur_location ?: return 0
+        curLocation ?: return 0
         val transform = transformation * arrayOf(getCoord()).transpose()
         return Math.round(transform[1][0]).toInt()
     }
 
     private fun getCoord() : Vector {
-        return doubleArrayOf(cur_location?.longitude ?: 0.0,cur_location?.latitude ?: 0.0 , 1.0)
+        return doubleArrayOf(curLocation?.longitude ?: 0.0,curLocation?.latitude ?: 0.0 , 1.0)
     }
 
     fun getRoute(p1 : Point , p2 : Point):List<Point>{
@@ -88,7 +102,6 @@ class Place(
                 }
             }
             return listOf() //maybe validate the graph to make sure that it is a connected one. This way, this line of code is never run.
-
         }
         //build some collections
         val pointInRouteQueue = PriorityQueue<PointInRoute>()

@@ -80,6 +80,9 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         drawPaths(canvas)
         drawPointText(canvas)
         drawLocation(canvas)
+        if(route != null){
+            drawRoute(canvas,route!!)
+        }
     }
 
     private fun drawPaths(canvas: Canvas){
@@ -115,13 +118,15 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         for(pointindex in 0..(route.size-2)){
             val point = route[pointindex]
             val subPoint = route[pointindex+1]
-            canvas.drawLine(
-                (point.x - focusRect.left).toFloat(),
-                (point.y - focusRect.top).toFloat(),
-                (subPoint.x - focusRect.left).toFloat(),
-                (subPoint.y - focusRect.top).toFloat(),
-                routePaint
-                    )
+            if (focusRect.contains(point.x,point.y) || focusRect.contains(subPoint.x,subPoint.y)) {
+                canvas.drawLine(
+                    (point.x - focusRect.left).toFloat(),
+                    (point.y - focusRect.top).toFloat(),
+                    (subPoint.x - focusRect.left).toFloat(),
+                    (subPoint.y - focusRect.top).toFloat(),
+                    routePaint
+                )
+            }
         }
     }
 
