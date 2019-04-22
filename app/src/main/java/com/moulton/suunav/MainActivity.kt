@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             setOnBufferChange { map.postInvalidate() }
         }
-        map.route = map.place.getRoute(place.graph.points[0],place.graph.points[5])
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
@@ -44,8 +43,14 @@ class MainActivity : AppCompatActivity() {
                 override fun onLocationResult(p0: LocationResult?) {
                     super.onLocationResult(p0)
                     p0 ?: return
-                    place.cur_location = p0.lastLocation
+                    place.curLocation = p0.lastLocation
+
+                    map.route = map.place.getRoute(
+                        map.place.graph.points.find{p -> p.Id == 1}!!,
+                        map.place.graph.points.find{p -> p.Id == 5}!!
+                        )
                     map.invalidate()
+
                 }
             }
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
