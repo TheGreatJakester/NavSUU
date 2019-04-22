@@ -117,13 +117,13 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private fun drawRoute(canvas: Canvas, route: List<Point>){
         for(pointindex in 0..(route.size-2)){
             val point = route[pointindex]
-            val subPoint = route[pointindex+1]
-            if (focusRect.contains(point.x,point.y) || focusRect.contains(subPoint.x,subPoint.y)) {
+            val nextPoint = route[pointindex+1]
+            if (focusRect.contains(point.x,point.y) || focusRect.contains(nextPoint.x,nextPoint.y)) {
                 canvas.drawLine(
                     (point.x - focusRect.left).toFloat(),
                     (point.y - focusRect.top).toFloat(),
-                    (subPoint.x - focusRect.left).toFloat(),
-                    (subPoint.y - focusRect.top).toFloat(),
+                    (nextPoint.x - focusRect.left).toFloat(),
+                    (nextPoint.y - focusRect.top).toFloat(),
                     routePaint
                 )
             }

@@ -48,13 +48,11 @@ class Graph {
                 }
             }
             private fun pathToHereFromStart(endPoint: LinkedPoint,pathSoFar:MutableList<LinkedPoint>):List<LinkedPoint>{
-                if(endPoint.isStartPoint) return pathSoFar
-                else if(endPoint.previousPointInPath != null){
-                    pathSoFar.add(endPoint)
-                    return pathToHereFromStart(endPoint.previousPointInPath!!,pathSoFar)
-                } else{
-                    return pathSoFar
-                }
+                pathSoFar.add(endPoint)
+                if(endPoint.isStartPoint)return pathSoFar
+                else if(endPoint.previousPointInPath != null)return pathToHereFromStart(endPoint.previousPointInPath!!,pathSoFar)
+                else return pathSoFar
+
 
             }
             fun pathToHereFromStart():List<LinkedPoint>{
