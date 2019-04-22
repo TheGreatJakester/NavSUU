@@ -6,7 +6,10 @@ data class Edge(
     var distance: Double
 )
 
-class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
+open class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
+    constructor (p:Point):this(p.Id,p.x,p.y,p.name){
+        this.edges = p.edges
+    }
 
     var edges = HashMap<Point,Float>()
 
