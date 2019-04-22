@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.widget.ListAdapter
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback,null)
         } else {
             //TODO ask for permision
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),0)
             Toast.makeText(this, "No permission for location", Toast.LENGTH_SHORT).show()
         }
 
