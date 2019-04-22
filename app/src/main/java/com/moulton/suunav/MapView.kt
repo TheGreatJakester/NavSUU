@@ -25,7 +25,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     }
     private val routePaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.RED
-        strokeWidth = 2f
+        strokeWidth = 6f
     }
     private val locationPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.RED

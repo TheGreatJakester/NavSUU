@@ -7,6 +7,8 @@ import android.graphics.BitmapRegionDecoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
+import android.widget.ListAdapter
 import android.widget.Toast
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,6 +31,20 @@ class MainActivity : AppCompatActivity() {
             setOnBufferChange { map.postInvalidate() }
         }
 
+        navigate.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(this).apply {
+                val choices = place.graph.points.filter { it.name != null }.map{it.name}.toTypedArray()
+                setSingleChoiceItems(choices,-1){  dialog , which ->
+                    map.route = place.getRoute(
+                        place.nearestPoint,
+                        place.graph.points.find{it.name.equals(choices[which])}!!
+                    )
+                    dialog.dismiss()
+                }
+                show()
+            }
+        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
 
@@ -38,17 +54,11 @@ class MainActivity : AppCompatActivity() {
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
 
-            val c = this.baseContext
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(p0: LocationResult?) {
                     super.onLocationResult(p0)
                     p0 ?: return
                     place.curLocation = p0.lastLocation
-
-                    map.route = map.place.getRoute(
-                        map.place.graph.points.find{p -> p.Id == 1}!!,
-                        map.place.graph.points.find{p -> p.Id == 5}!!
-                        )
                     map.invalidate()
 
                 }
