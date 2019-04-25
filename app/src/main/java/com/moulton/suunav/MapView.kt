@@ -11,12 +11,6 @@ import android.view.View
 
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
-    lateinit var place:Place
-    lateinit var mapImage : Bitmap
-    var route : List<Point>? = null
-    private lateinit var screenRect : Rect
-    private lateinit var focusRect: Rect
-
     private val imagePaint = Paint(ANTI_ALIAS_FLAG)
     private val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
@@ -34,6 +28,34 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         color = Color.BLACK
         style = Paint.Style.FILL
         textSize = 32f
+    }
+
+    lateinit var place:Place
+    lateinit var mapImage : Bitmap
+    var route : List<Point>? = null
+    private lateinit var screenRect : Rect
+    private var focusRect : Rect = Rect(0,0,0,0)
+
+    fun bounded(low: Int, value : Int, high:Int):Int{
+        if(value < low){
+            return low
+        } else if(value > high){
+            return high
+        } else{
+            return value
+        }
+    }
+
+    fun setFocusRect(left:Int,top:Int,right:Int,bottom:Int) {
+        focusRect.left = bounded(0,left,mapImage.width)
+        focusRect.top = bounded(0,top,mapImage.height)
+        focusRect.right = bounded(0,right,mapImage.width)
+        focusRect.bottom = bounded(0,bottom,mapImage.height)
+    }
+    fun offSetFocusRect(dx:Int,dy:Int){
+        val adjustedDx : Int = bounded(-focusRect.left,dx,mapImage.width - focusRect.right)
+        val adjustedDy : Int = bounded(-focusRect.top,dy,mapImage.height - focusRect.bottom)
+        focusRect.offset(adjustedDx,adjustedDy)
     }
 
     init{
@@ -58,7 +80,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
             if(event.historySize > 0) {
                 val deltaX = event.getHistoricalX(0) - event.x
                 val deltaY = event.getHistoricalY(0) - event.y
-                focusRect.offset(deltaX.toInt(), deltaY.toInt())
+                offSetFocusRect(deltaX.toInt(), deltaY.toInt())
                 invalidate()
             }
             return true
