@@ -77,8 +77,8 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
-        drawPaths(canvas)
-        drawPointText(canvas)
+        //drawPaths(canvas)
+        //drawPointText(canvas)
         drawLocation(canvas)
         if(route != null){
             drawRoute(canvas,route!!)

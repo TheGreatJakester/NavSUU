@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         place = PlaceParser(this).parse(R.xml.points,R.xml.paths)
+        var test = BitmapFactory.decodeResource(resources,R.drawable.suu)
         map.place = place
         map.imageManager = RegionManager(
             BitmapRegionDecoder.newInstance(
