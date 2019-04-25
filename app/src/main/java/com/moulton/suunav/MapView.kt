@@ -76,12 +76,48 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if(detector.onTouchEvent(event)){
             return true
-        } else if(event.action == MotionEvent.ACTION_MOVE){
-            if(event.historySize > 0) {
-                val deltaX = event.getHistoricalX(0) - event.x
-                val deltaY = event.getHistoricalY(0) - event.y
-                offSetFocusRect(deltaX.toInt(), deltaY.toInt())
-                invalidate()
+        } else if(event.action == MotionEvent.ACTION_MOVE) {
+            if (event.historySize > 0) {
+                if(event.pointerCount >= 2){
+                    //start zoom and move
+
+                    //detect how much zoom has happened
+                    val initialDistance = Math.pow(
+                            Math.pow(event.getHistoricalX(0,0).toDouble()-event.getHistoricalX(1,0).toDouble(),2.0)+
+                            Math.pow(event.getHistoricalY(0,0).toDouble()-event.getHistoricalY(1,0).toDouble(),2.0)
+                        ,.5)
+                    val currentDistance = Math.pow(
+                            Math.pow(event.getHistoricalX(0,event.historySize - 1).toDouble()-event.getHistoricalX(1,event.historySize -1).toDouble(),2.0)+
+                            Math.pow(event.getHistoricalY(0,event.historySize - 1).toDouble()-event.getHistoricalY(1,event.historySize - 1).toDouble(),2.0)
+                        ,.5)
+
+                    val deltaDistanceBetweenFingers = (initialDistance - currentDistance)*10
+
+                    val initialCenterX = event.getHistoricalX(0,0) + event.getHistoricalX(1,0) / 2
+                    val initialCenterY = event.getHistoricalY(0,0) + event.getHistoricalY(1,0) / 2
+
+                    val currentCenterX = event.getHistoricalX(0,event.historySize - 1) + event.getHistoricalX(1,event.historySize - 1) / 2
+                    val currentCenterY = event.getHistoricalY(0,event.historySize - 1) + event.getHistoricalY(1,event.historySize - 1) / 2
+
+                    val deltaX = initialCenterX - currentCenterX
+                    val deltaY = initialCenterY - currentCenterY
+
+                    setFocusRect(
+                        focusRect.left-(deltaDistanceBetweenFingers/2).toInt() + deltaX.toInt(),
+                        focusRect.top-(deltaDistanceBetweenFingers/2).toInt() + deltaY.toInt(),
+                        focusRect.right+(deltaDistanceBetweenFingers/2).toInt() + deltaX.toInt(),
+                        focusRect.bottom+(deltaDistanceBetweenFingers/2).toInt() + deltaY.toInt()
+                    )
+
+
+
+                } else {
+                    val deltaX = event.getHistoricalX(0) - event.x
+                    val deltaY = event.getHistoricalY(0) - event.y
+                    offSetFocusRect(deltaX.toInt(), deltaY.toInt())
+                    invalidate()
+                }
+                
             }
             return true
         } else {
