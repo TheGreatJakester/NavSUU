@@ -91,7 +91,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
                             Math.pow(event.getHistoricalY(0,event.historySize - 1).toDouble()-event.getHistoricalY(1,event.historySize - 1).toDouble(),2.0)
                         ,.5)
 
-                    val deltaDistance = initialDistance - currentDistance
+                    val deltaDistanceBetweenFingers = (initialDistance - currentDistance)*10
 
                     val initialCenterX = event.getHistoricalX(0,0) + event.getHistoricalX(1,0) / 2
                     val initialCenterY = event.getHistoricalY(0,0) + event.getHistoricalY(1,0) / 2
@@ -101,6 +101,13 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
 
                     val deltaX = initialCenterX - currentCenterX
                     val deltaY = initialCenterY - currentCenterY
+
+                    setFocusRect(
+                        focusRect.left-(deltaDistanceBetweenFingers/2).toInt() + deltaX.toInt(),
+                        focusRect.top-(deltaDistanceBetweenFingers/2).toInt() + deltaY.toInt(),
+                        focusRect.right+(deltaDistanceBetweenFingers/2).toInt() + deltaX.toInt(),
+                        focusRect.bottom+(deltaDistanceBetweenFingers/2).toInt() + deltaY.toInt()
+                    )
 
 
 
