@@ -12,11 +12,10 @@ import android.view.View
 
 class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var place:Place
+    lateinit var mapImage : Bitmap
     var route : List<Point>? = null
     private lateinit var screenRect : Rect
     private lateinit var focusRect: Rect
-    private var imgRect : Rect
-    lateinit var imageManager : RegionManager
 
     private val imagePaint = Paint(ANTI_ALIAS_FLAG)
     private val pathPaint = Paint(ANTI_ALIAS_FLAG).apply {
@@ -42,12 +41,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
             screenRect = Rect(0,0,width,height)
             focusRect = Rect(0,0,width,height)
         }
-        val sizeOptions = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
-        BitmapFactory.decodeResource(context.resources,R.drawable.suu,sizeOptions)
-        imgRect = Rect(0,0,sizeOptions.outWidth,sizeOptions.outHeight)
-        
     }
 
     private val detector : GestureDetector = GestureDetector(context,
@@ -75,11 +68,9 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     }
 
     override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        imageManager.drawRegion(canvas!!,focusRect,screenRect,imagePaint)
-        //drawPaths(canvas)
-        //drawPointText(canvas)
+        super.onDraw(canvas!!)
         drawLocation(canvas)
+        canvas.drawBitmap(mapImage,focusRect,screenRect,imagePaint)
         if(route != null){
             drawRoute(canvas,route!!)
         }
