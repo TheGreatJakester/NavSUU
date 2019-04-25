@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         place = PlaceParser(this).parse(R.xml.points,R.xml.paths)
         map.place = place
-        map.mapImage = BitmapFactory.decodeResource(resources,R.mipmap.suu)
+        map.mapImage = BitmapFactory.decodeResource(resources,R.drawable.suu)
 
         navigate.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this).apply {

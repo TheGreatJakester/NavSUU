@@ -46,6 +46,13 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         }
     }
 
+    fun pointOnFocus(p:Point):Pair<Int,Int>{
+        val widthScaling = screenRect.width()/focusRect.width().toFloat()
+        val heightScaling = screenRect.height()/focusRect.height().toFloat()
+
+        return Pair(((p.x - focusRect.left) * widthScaling).toInt(),((p.y - focusRect.top)*heightScaling).toInt())
+    }
+
     fun setFocusRect(left:Int,top:Int,right:Int,bottom:Int) {
         focusRect.left = bounded(0,left,mapImage.width)
         focusRect.top = bounded(0,top,mapImage.height)
@@ -109,8 +116,6 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
                         focusRect.bottom+(deltaDistanceBetweenFingers/2).toInt() + deltaY.toInt()
                     )
 
-
-
                 } else {
                     val deltaX = event.getHistoricalX(0) - event.x
                     val deltaY = event.getHistoricalY(0) - event.y
@@ -129,27 +134,30 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         super.onDraw(canvas!!)
         drawLocation(canvas)
         canvas.drawBitmap(mapImage,focusRect,screenRect,imagePaint)
+        drawPaths(canvas)
+        drawPointText(canvas)
         if(route != null){
             drawRoute(canvas,route!!)
         }
     }
 
     private fun drawPaths(canvas: Canvas){
-        for(point in place.graph.points){
-            if(focusRect.contains(point.x,point.y)){
-                for(subPoint in point.edges.keys){
-                    canvas.drawLine(
-                        (point.x - focusRect.left).toFloat(),
-                        (point.y - focusRect.top).toFloat(),
-                        (subPoint.x - focusRect.left).toFloat(),
-                        (subPoint.y - focusRect.top).toFloat(),
-                        pathPaint
-                    )
-                }
-            }
+       for(point in place.graph.points){
+           var (x,y) = pointOnFocus(point)
+           for(subPoint in point.edges.keys){
+                var (subX,subY) = pointOnFocus(subPoint)
+                canvas.drawLine(
+                    x.toFloat(),
+                    y.toFloat(),
+                    subX.toFloat(),
+                    subY.toFloat(),
+                    pathPaint
+                )
+           }
         }
     }
 
+    //depricated?
     private fun drawPointText(canvas: Canvas){
         for(point in place.graph.points){
             if(focusRect.contains(point.x,point.y)){
