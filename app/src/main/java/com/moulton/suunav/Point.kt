@@ -6,7 +6,10 @@ data class Edge(
     var distance: Double
 )
 
-class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
+open class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
+    constructor (p:Point):this(p.Id,p.x,p.y,p.name){
+        this.edges = p.edges
+    }
 
     var edges = HashMap<Point,Float>()
 
@@ -19,7 +22,7 @@ class Point(var Id :Int, var x:Int, var y: Int, var name: String?){
         return this.edges.containsKey(p)
     }
 
-    private fun dist(p :Point): Float{
+    fun dist(p :Point): Float{
         return Math.pow(
             Math.pow((x-p.x).toDouble(),2.0) +
                     Math.pow((y-p.y).toDouble(),2.0)
