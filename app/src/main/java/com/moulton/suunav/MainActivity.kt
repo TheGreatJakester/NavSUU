@@ -34,12 +34,16 @@ class MainActivity : AppCompatActivity() {
                         place.graph.points.find{it.name.equals(choices[which])}!!
                     )
                     map.focusRectToLocation()
+                    map.lockedOn = true
                     dialog.dismiss()
                 }
                 show()
             }
         }
-
+        lock.setOnClickListener{
+            map.focusRectToLocation()
+            map.lockedOn = true
+        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED) {
 
@@ -54,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                     super.onLocationResult(p0)
                     p0 ?: return
                     place.curLocation = p0.lastLocation
+                    if (map.lockedOn) map.focusRectToLocation()
                     map.invalidate()
 
                 }

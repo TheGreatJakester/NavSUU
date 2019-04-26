@@ -27,8 +27,9 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     private val pointTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         style = Paint.Style.FILL
-        textSize = 32f
+        textSize = 64f
     }
+    var lockedOn = false
 
     lateinit var place:Place
     lateinit var mapImage : Bitmap
@@ -124,12 +125,14 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
                         focusRect.right+(deltaDistanceBetweenFingers/2).toInt() + deltaX.toInt(),
                         focusRect.bottom+(deltaDistanceBetweenFingers/2).toInt() + deltaY.toInt()
                     )
+                    lockedOn = false
 
                 } else {
                     val deltaX = event.getHistoricalX(0) - event.x
                     val deltaY = event.getHistoricalY(0) - event.y
                     offSetFocusRect(deltaX.toInt(), deltaY.toInt())
                     invalidate()
+                    lockedOn = false
                 }
                 
             }
@@ -143,7 +146,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         super.onDraw(canvas!!)
         drawLocation(canvas)
         canvas.drawBitmap(mapImage,focusRect,screenRect,imagePaint)
-        drawPaths(canvas)
+        //drawPaths(canvas)
         drawLocation(canvas)
         route?.let{
             drawRoute(canvas,it)

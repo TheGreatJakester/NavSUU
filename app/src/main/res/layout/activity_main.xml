@@ -17,5 +17,12 @@
             android:layout_height="0dp"
             android:id="@+id/map" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/navigate"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+            android:text="Return to location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lock"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
 </android.support.constraint.ConstraintLayout>
