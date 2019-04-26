@@ -33,6 +33,15 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
     lateinit var place:Place
     lateinit var mapImage : Bitmap
     var route : List<Point>? = null
+    set(value) {
+        field?.first()?.let{
+            verbosePoints.remove(it)
+        }
+        value?.first()?.let{
+            verbosePoints[it] = it.name ?: "Destination"
+        }
+        field = value
+    }
     private lateinit var screenRect : Rect
     private var focusRect : Rect = Rect(0,0,0,0)
 
@@ -135,9 +144,11 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         drawLocation(canvas)
         canvas.drawBitmap(mapImage,focusRect,screenRect,imagePaint)
         drawPaths(canvas)
-        drawPointText(canvas)
-        if(route != null){
-            drawRoute(canvas,route!!)
+        drawLocation(canvas)
+        route?.let{
+            drawRoute(canvas,it)
+            val firstPointInPath = it.first()
+            drawTextOnPoint(canvas, *verbosePoints.toList().toTypedArray())
         }
     }
 
@@ -146,7 +157,7 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
            var (x,y) = pointOnFocus(point)
            for(subPoint in point.edges.keys){
                 var (subX,subY) = pointOnFocus(subPoint)
-                canvas.drawLine(
+               canvas.drawLine(
                     x.toFloat(),
                     y.toFloat(),
                     subX.toFloat(),
@@ -157,33 +168,26 @@ class MapView(context: Context,attr : AttributeSet) : View(context,attr) {
         }
     }
 
-    //depricated?
-    private fun drawPointText(canvas: Canvas){
-        for(point in place.graph.points){
-            if(focusRect.contains(point.x,point.y)){
-                canvas.drawText(
-                    point.Id.toString(),
-                    (point.x - focusRect.left).toFloat(),
-                    (point.y - focusRect.top).toFloat(),
-                    pointTextPaint
-                )
-            }
+    val verbosePoints = HashMap<Point,String>()
+    private fun drawTextOnPoint(canvas: Canvas,vararg pointsAndText : Pair<Point,String>){
+        for((p,t) in pointsAndText) {
+            val (x,y) = pointOnFocus(p)
+            canvas.drawText(t,x.toFloat(),y.toFloat(),pointTextPaint)
         }
     }
 
     private fun drawRoute(canvas: Canvas, route: List<Point>){
         for(pointindex in 0..(route.size-2)){
-            val point = route[pointindex]
-            val nextPoint = route[pointindex+1]
-            if (focusRect.contains(point.x,point.y) || focusRect.contains(nextPoint.x,nextPoint.y)) {
-                canvas.drawLine(
-                    (point.x - focusRect.left).toFloat(),
-                    (point.y - focusRect.top).toFloat(),
-                    (nextPoint.x - focusRect.left).toFloat(),
-                    (nextPoint.y - focusRect.top).toFloat(),
-                    routePaint
-                )
-            }
+            val (x,y) = pointOnFocus(route[pointindex])
+            val (xNext,yNext) = pointOnFocus(route[pointindex+1])
+            canvas.drawLine(
+                x.toFloat(),
+                y.toFloat(),
+                xNext.toFloat(),
+                yNext.toFloat(),
+                routePaint
+            )
+
         }
     }
 

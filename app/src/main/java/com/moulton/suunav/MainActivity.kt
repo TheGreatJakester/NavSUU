@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                         place.nearestPoint,
                         place.graph.points.find{it.name.equals(choices[which])}!!
                     )
+                    map.focusRectToLocation()
                     dialog.dismiss()
                 }
                 show()
